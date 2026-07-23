@@ -1,6 +1,9 @@
+import { useState } from "react";
 import Reveal from "../components/Reveal.jsx";
 
 const GITHUB_PROFILE = "https://github.com/NickTAM1";
+
+const FILTERS = ["All", "UE5", "Unity", "Graphics"];
 
 function MediaPlaceholder({ label }) {
   return (
@@ -28,6 +31,12 @@ function MediaVideo({ src, label }) {
 }
 
 export default function Projects() {
+  const [filter, setFilter] = useState("All");
+
+  const showsMobius = filter === "All" || filter === "UE5";
+  const showsRadswing = filter === "All" || filter === "Unity";
+  const showsFft = filter === "All" || filter === "Graphics";
+
   return (
     <div className="container">
       <h1>Projects</h1>
@@ -36,7 +45,23 @@ export default function Projects() {
         generator are still placeholders until clips are added.
       </p>
 
-      <Reveal className="box" index={0}>
+      <div className="filter-tabs" role="group" aria-label="Filter projects by category">
+        {FILTERS.map((label) => (
+          <button
+            key={label}
+            type="button"
+            className={`filter-tab${filter === label ? " active" : ""}`}
+            aria-pressed={filter === label}
+            onClick={() => setFilter(label)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {showsMobius && (
+      <Reveal className="box project-card" index={0}>
+        <span className="mono-label accent project-category">UE5 // GAME SYSTEMS</span>
         <h2>Möbius Fish (UE5 3D Water-Based Tower Defense Roguelike)</h2>
         <p className="project-summary">
           A 3D top-down tower defense roguelike built around real fluid
@@ -141,8 +166,11 @@ BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
           </a>
         </div>
       </Reveal>
+      )}
 
-      <Reveal className="box" index={1}>
+      {showsRadswing && (
+      <Reveal className="box project-card" index={1}>
+        <span className="mono-label accent project-category">UNITY // GAME SYSTEMS</span>
         <h2>Radswing (Fast-Paced First-Person Kick Fighter)</h2>
         <p className="project-summary">
           A first-person kick fighter where momentum is the weapon: sprint,
@@ -214,8 +242,11 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
           </a>
         </div>
       </Reveal>
+      )}
 
-      <Reveal className="box" index={2}>
+      {showsFft && (
+      <Reveal className="box project-card" index={2}>
+        <span className="mono-label accent project-category">GRAPHICS // SIMULATION</span>
         <h2>FFT Ocean Wave Generator</h2>
         <p className="project-summary">
           Simulates realistic ocean waves using FFT and the Phillips spectrum,
@@ -292,6 +323,7 @@ double PhillipsSpectrum(FVector2 k, FVector2 windDir, double windSpeed, double A
           </a>
         </div>
       </Reveal>
+      )}
 
       <Reveal className="box" index={3}>
         <h2>Beyond Games</h2>
