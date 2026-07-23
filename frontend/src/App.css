@@ -123,6 +123,31 @@ nav a:focus-visible {
   pointer-events: none;
 }
 
+/* Cursor-tracking edge-light "spotlight" glow. Sits in the ::after slot so it
+   never conflicts with the ::before gradient rim above. Position is written
+   by useCardGlow.js as plain --mx/--my DOM style properties (no React
+   re-renders); visibility is handled entirely by :hover below, which is free
+   and instant. Also applies to .project-card-compact since it always carries
+   the .box class alongside it (see Projects.jsx). */
+.box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(52, 211, 153, 0.14),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease-out);
+  pointer-events: none;
+}
+
+.box:hover::after {
+  opacity: 1;
+}
+
 .box h2 {
   margin-top: 0;
 }
@@ -592,6 +617,15 @@ nav a:focus-visible {
   color: var(--text);
   opacity: 0;
   transform: translateY(24px) scale(0.96);
+  /* `display: flex` above is intentionally unconditional (not scoped to
+     [open]) so the opacity/transform can animate smoothly on close instead
+     of vanishing instantly -- but that means this element stays laid out
+     with real dimensions at inset:0 even while "closed". Without this rule
+     it silently intercepts clicks over its centered footprint on the whole
+     Projects page (confirmed via elementFromPoint) even when invisible.
+     pointer-events: none here, flipped back to auto by .project-modal[open]
+     below, keeps it click-through except while actually open. */
+  pointer-events: none;
   transition: opacity var(--t-slow) var(--ease-emphasized),
     transform var(--t-slow) var(--ease-emphasized), overlay var(--t-slow) allow-discrete,
     display var(--t-slow) allow-discrete;
@@ -614,6 +648,7 @@ nav a:focus-visible {
 .project-modal[open] {
   opacity: 1;
   transform: none;
+  pointer-events: auto;
 }
 
 @starting-style {

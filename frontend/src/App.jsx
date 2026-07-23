@@ -4,6 +4,7 @@ import Background from "./pages/Background.jsx";
 import Projects from "./pages/Projects.jsx";
 import Contact from "./pages/Contact.jsx";
 import WaveBackground from "./components/WaveBackground.jsx";
+import useCardGlow from "./hooks/useCardGlow.js";
 import "./App.css";
 
 function navLinkClass({ isActive }) {
@@ -11,6 +12,11 @@ function navLinkClass({ isActive }) {
 }
 
 export default function App() {
+  // One shared pointermove listener drives the cursor-tracking glow on every
+  // .box / .project-card-compact card across all pages -- see the hook for
+  // why this lives at the app shell level instead of per-card.
+  useCardGlow();
+
   return (
     <HashRouter>
       <WaveBackground />
