@@ -16,13 +16,22 @@ function MediaPlaceholder({ label }) {
   );
 }
 
+function MediaVideo({ src, label }) {
+  return (
+    <div className="media-container">
+      <span className="badge-emerald media-caption">{label}</span>
+      <video className="project-video" src={src} controls preload="metadata" />
+    </div>
+  );
+}
+
 export default function Projects() {
   return (
     <div className="container">
       <h1>Projects</h1>
       <p>
-        Media below is a placeholder image, not a real capture. Swap in an
-        actual gameplay clip or screenshot for each project when available.
+        Möbius Fish has a real gameplay capture below. Radswing and the FFT
+        generator are still placeholders until clips are added.
       </p>
 
       <div className="box">
@@ -33,7 +42,7 @@ export default function Projects() {
         <span className="badge-emerald">Physics Simulation</span>
         <span className="badge-emerald">Firebase</span>
 
-        <MediaPlaceholder label="UE5 Real time Telemetry" />
+        <MediaVideo src="/Selfweb/media/mobius-gameplay.mp4" label="UE5 Gameplay Capture" />
 
         <p>
           Core C++ systems engineering for a 3D top down tower defense game

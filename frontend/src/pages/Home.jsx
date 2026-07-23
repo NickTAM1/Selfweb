@@ -33,11 +33,25 @@ export default function Home() {
       </div>
       <div className="box">
         <h2>Skills</h2>
-        <p>
-          C++ / UE5, C# / Unity, Python, TypeScript / JS, HTML5 / CSS3, Java,
-          UE5 State Tree, FFT &amp; Phillips Spectrum, Physics Simulation,
-          Firebase / REST APIs, Git / VS Code / Rider
-        </p>
+        <div>
+          {[
+            "C++ / UE5",
+            "C# / Unity",
+            "Python",
+            "TypeScript / JS",
+            "HTML5 / CSS3",
+            "Java",
+            "UE5 State Tree",
+            "FFT & Phillips Spectrum",
+            "Physics Simulation",
+            "Firebase / REST APIs",
+            "Git / VS Code / Rider",
+          ].map((skill) => (
+            <span className="badge-emerald" key={skill}>
+              {skill}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

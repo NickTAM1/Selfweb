@@ -8,6 +8,11 @@ export default function Git() {
             https://github.com/NickTAM1
           </a>
         </p>
+        <p>
+          <a href="https://github.com/HUKLIA" target="_blank" rel="noreferrer">
+            https://github.com/HUKLIA
+          </a>
+        </p>
       </div>
     </div>
   );
