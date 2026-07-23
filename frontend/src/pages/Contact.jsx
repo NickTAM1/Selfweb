@@ -66,7 +66,7 @@ export default function Contact() {
               onChange={(e) => setMessage(e.target.value)}
             />
           </p>
-          <button type="submit">Send</button>
+          <button className="btn-glass" type="submit">Send</button>
         </form>
         <p>(Form is a design placeholder, not yet connected to a backend.)</p>
       </div>

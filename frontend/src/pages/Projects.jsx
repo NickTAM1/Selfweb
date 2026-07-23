@@ -1,11 +1,40 @@
+const GITHUB_PROFILE = "https://github.com/NickTAM1";
+
+function MediaPlaceholder({ label }) {
+  return (
+    <div className="media-container media-placeholder">
+      <p>No gameplay clip or screenshot added yet</p>
+      <div className="media-overlay">
+        <span className="badge-emerald">{label}</span>
+        <div className="media-controls">
+          <button className="btn-glass" disabled>
+            ▶ Play Clip
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Projects() {
   return (
     <div className="container">
       <h1>Projects</h1>
+      <p>
+        Media below is a placeholder image, not a real capture. Swap in an
+        actual gameplay clip or screenshot for each project when available.
+      </p>
 
       <div className="box">
         <h2>Möbius Fish (UE5 3D Water-Based Tower Defense Roguelike)</h2>
-        <p>Unreal Engine 5, C++, State Tree, Physics Simulation, Firebase</p>
+        <span className="badge-emerald">Unreal Engine 5</span>
+        <span className="badge-emerald">C++</span>
+        <span className="badge-emerald">State Tree</span>
+        <span className="badge-emerald">Physics Simulation</span>
+        <span className="badge-emerald">Firebase</span>
+
+        <MediaPlaceholder label="UE5 Real time Telemetry" />
+
         <p>
           Core C++ systems engineering for a 3D top down tower defense game
           featuring dynamic fluid dynamics, custom boat buoyancy, and
@@ -17,7 +46,7 @@ export default function Projects() {
             range every frame with FMath::Lerp, instead of a hard snap.
           </li>
           <li>
-            Auto-right if flipped: dot product between the boat&apos;s up
+            Auto right if flipped: dot product between the boat&apos;s up
             vector and world up detects a bad tilt, then a torque from
             CrossProduct(BoatUp, WorldUp) rights the boat.
           </li>
@@ -34,7 +63,7 @@ export default function Projects() {
             longer range and direct velocity up close.
           </li>
           <li>
-            Player-contact detection used to fail because Blueprint cached
+            Player contact detection used to fail because Blueprint cached
             stale actor tags; switched to IsA(BoatClass) checks instead.
           </li>
           <li>
@@ -43,17 +72,52 @@ export default function Projects() {
             bOrientRotationToMovement during the jump and rotating the mesh
             180° in Blueprint.
           </li>
-          <li>
-            Evaluated Mass State Tree for performance but it&apos;s
-            incompatible with ACharacter, animations, and Blueprint
-            subclasses, so stayed with regular State Tree.
-          </li>
         </ul>
+        <p>
+          <strong>Trade off:</strong> evaluated Mass State Tree for the AI
+          layer, but rejected it since it is incompatible with ACharacter,
+          animation Blueprints, and adds architectural setup overhead that
+          does not pay off at this enemy count. Stayed with regular C++
+          State Tree for clean, modular, low CPU overhead transitions.
+        </p>
+
+        <details className="code-viewer box">
+          <summary>View self righting torque (illustrative, reconstructed)</summary>
+          <pre>{`// Reconstructed from the described behavior, not the original source file
+FVector BoatUp = GetActorUpVector();
+FVector WorldUp = FVector::UpVector;
+
+if (FVector::DotProduct(BoatUp, WorldUp) < 0.8f)
+{
+    FVector CorrectiveTorque = FVector::CrossProduct(BoatUp, WorldUp) * StabilizationStrength;
+    BoatMesh->AddTorqueInDegrees(CorrectiveTorque, NAME_None, true);
+}
+
+// Clamp yaw spin so turning stays snappy but controlled
+FVector AngularVelocity = BoatMesh->GetPhysicsAngularVelocityInDegrees();
+AngularVelocity.Z = FMath::Clamp(AngularVelocity.Z, -MaxTurnAngleFromForward, MaxTurnAngleFromForward);
+BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
+        </details>
+
+        <a
+          className="btn-glass"
+          href={GITHUB_PROFILE}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Source on GitHub
+        </a>
       </div>
 
       <div className="box">
         <h2>Radswing (Fast-Paced First-Person Kick Fighter)</h2>
-        <p>Unity, C#, Physics Mechanics, AI Behavior</p>
+        <span className="badge-emerald">Unity</span>
+        <span className="badge-emerald">C#</span>
+        <span className="badge-emerald">Physics Mechanics</span>
+        <span className="badge-emerald">AI Behavior</span>
+
+        <MediaPlaceholder label="Unity Gameplay Capture" />
+
         <p>
           A first person kick fighter: walk, run, slide, double jump, and
           kick (F) to knock enemies back, the faster you&apos;re moving, the
@@ -65,7 +129,7 @@ export default function Projects() {
           <li>
             NavMesh snapback: after a kick knockback, enemies teleported back
             onto their path. Fixed with
-            navAgent.Warp(transform.position) when re-enabling the NavMesh
+            navAgent.Warp(transform.position) when re enabling the NavMesh
             agent, so it starts from where the enemy actually is.
           </li>
           <li>
@@ -74,14 +138,49 @@ export default function Projects() {
             once and resets itself.
           </li>
         </ul>
+
+        <details className="code-viewer box">
+          <summary>View NavMesh warp fix (illustrative, reconstructed)</summary>
+          <pre>{`// Reconstructed from the described behavior, not the original source file
+void OnKnockbackRecover()
+{
+    navAgent.Warp(transform.position); // tell NavMesh to resume from HERE
+    navAgent.enabled = true;
+}
+
+// Hit reaction fix: Bool -> Trigger
+animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre>
+        </details>
+
+        <a
+          className="btn-glass"
+          href={GITHUB_PROFILE}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Source on GitHub
+        </a>
       </div>
 
       <div className="box">
         <h2>FFT Ocean Wave Generator</h2>
-        <p>C++, Fast Fourier Transform, Phillips Spectrum, 3D Mesh Export</p>
+        <span className="badge-emerald">C++</span>
+        <span className="badge-emerald">Fast Fourier Transform</span>
+        <span className="badge-emerald">Phillips Spectrum</span>
+        <span className="badge-emerald">3D Mesh Export</span>
+
+        <MediaPlaceholder label="Blender Wave Render" />
+
         <p>
           Simulates realistic ocean waves using FFT and the Phillips
           spectrum, exporting the results as animated 3D meshes for Blender.
+        </p>
+        <p>
+          <strong>Complexity:</strong> direct spatial wave summation is O(N^4)
+          and unusable in real time. Replacing it with a Radix 2 Cooley Tukey
+          IFFT over a bit reversed butterfly diagram brings it down to
+          O(N log N), which is what makes generating a full heightmap per
+          frame practical at all.
         </p>
         <ul>
           <li>
@@ -100,6 +199,29 @@ export default function Projects() {
             and combined them into an animation sequence in Blender.
           </li>
         </ul>
+
+        <details className="code-viewer box">
+          <summary>View Phillips spectrum formula (illustrative, reconstructed)</summary>
+          <pre>{`// P(k) = A * exp(-1 / (k^2 * L^2)) / k^4 * |k . w|^2
+double PhillipsSpectrum(FVector2 k, FVector2 windDir, double windSpeed, double A, double L)
+{
+    double kLen = k.Length();
+    if (kLen < 1e-6) return 0.0;
+
+    double kDotW = Dot(Normalize(k), windDir);
+    double base = std::exp(-1.0 / (kLen * kLen * L * L)) / std::pow(kLen, 4);
+    return A * base * kDotW * kDotW;
+}`}</pre>
+        </details>
+
+        <a
+          className="btn-glass"
+          href={GITHUB_PROFILE}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View Source on GitHub
+        </a>
       </div>
     </div>
   );

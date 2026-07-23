@@ -1,6 +1,4 @@
 import { HashRouter, Routes, Route, Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css"
-import Button from 'react-bootstrap/Button'
 import Home from "./pages/Home.jsx";
 import Background from "./pages/Background.jsx";
 import Git from "./pages/Git.jsx";
