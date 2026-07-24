@@ -5,6 +5,7 @@ import Projects from "./pages/Projects.jsx";
 import Contact from "./pages/Contact.jsx";
 import WaveBackground from "./components/WaveBackground.jsx";
 import useCardGlow from "./hooks/useCardGlow.js";
+import useRipple from "./hooks/useRipple.js";
 import "./App.css";
 
 function navLinkClass({ isActive }) {
@@ -16,6 +17,10 @@ export default function App() {
   // .box / .project-card-compact card across all pages -- see the hook for
   // why this lives at the app shell level instead of per-card.
   useCardGlow();
+  // One shared pointerdown listener drives the click "bubble" ripple on every
+  // glass button across all pages -- see the hook for why it's delegated
+  // instead of wired per button.
+  useRipple();
 
   return (
     <HashRouter>
@@ -42,13 +47,24 @@ export default function App() {
       </Routes>
       <footer className="site-footer">
         <div className="footer-links">
-          <a href="https://github.com/NickTAM1" target="_blank" rel="noreferrer">
+          <a
+            className="btn-glass btn-link"
+            href="https://github.com/NickTAM1"
+            target="_blank"
+            rel="noreferrer"
+          >
             github.com/NickTAM1
           </a>
-          <a href="https://github.com/HUKLIA" target="_blank" rel="noreferrer">
+          <a
+            className="btn-glass btn-link"
+            href="https://github.com/HUKLIA"
+            target="_blank"
+            rel="noreferrer"
+          >
             github.com/HUKLIA
           </a>
           <a
+            className="btn-glass btn-link"
             href="https://www.linkedin.com/in/chilek-tam-huzi"
             target="_blank"
             rel="noreferrer"

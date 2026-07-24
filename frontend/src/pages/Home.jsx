@@ -75,7 +75,7 @@ export default function Home() {
         <span className="hero-eyebrow">Junior Software Developer</span>
         <h1>Chi Lek (Nick) Tam</h1>
         <p className="hero-pitch">
-          Full-stack developer who also builds game systems &mdash; UE5 physics
+          Full-stack developer who also builds game systems: UE5 physics
           and AI, plus web, mobile, and backend. I build the parts under the
           hood and figure out why they break.
         </p>

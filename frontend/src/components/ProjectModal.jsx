@@ -1,29 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import MediaGallery from "./MediaGallery.jsx";
 
-function MediaPlaceholder({ label }) {
-  return (
-    <div className="media-container media-placeholder">
-      <p>No gameplay clip or screenshot added yet</p>
-      <div className="media-overlay">
-        <span className="badge-emerald">{label}</span>
-        <div className="media-controls">
-          <button className="btn-glass" disabled>
-            ▶ Play Clip
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MediaVideo({ src, label }) {
-  return (
-    <div className="media-container">
-      <span className="badge-emerald media-caption">{label}</span>
-      <video className="project-video" src={src} controls preload="metadata" />
-    </div>
-  );
-}
+const MODAL_VARIANTS = {
+  closed: { scale: 0.85, opacity: 0 },
+  open: { scale: 1, opacity: 1 },
+};
 
 // Defensively open the dialog. showModal() can throw InvalidStateError in a
 // handful of real-world cases beyond the obvious "already open" one -- e.g.
@@ -78,6 +60,7 @@ function safeClose(dialog) {
 export default function ProjectModal({ project, onClose }) {
   const dialogRef = useRef(null);
   const [renderedProject, setRenderedProject] = useState(project);
+  const reduceMotion = useReducedMotion();
 
   // Keep the dialog's contents in sync when a project is selected. Setting this
   // during render (not in an effect) means the content is correct before the
@@ -189,7 +172,17 @@ export default function ProjectModal({ project, onClose }) {
       aria-labelledby={renderedProject ? "project-modal-title" : undefined}
     >
       {renderedProject && (
-        <div className="project-modal-inner">
+        <motion.div
+          className="project-modal-inner"
+          variants={MODAL_VARIANTS}
+          initial="closed"
+          animate={project ? "open" : "closed"}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 420, damping: 30 }
+          }
+        >
           <button
             type="button"
             className="modal-close"
@@ -213,11 +206,7 @@ export default function ProjectModal({ project, onClose }) {
             ))}
           </div>
 
-          {renderedProject.media.type === "video" ? (
-            <MediaVideo src={renderedProject.media.src} label={renderedProject.media.label} />
-          ) : (
-            <MediaPlaceholder label={renderedProject.media.label} />
-          )}
+          <MediaGallery items={renderedProject.media} />
 
           <p className="project-section-label">Highlights</p>
           <ul className="highlights">
@@ -227,7 +216,7 @@ export default function ProjectModal({ project, onClose }) {
           </ul>
 
           {renderedProject.detail}
-        </div>
+        </motion.div>
       )}
     </dialog>
   );

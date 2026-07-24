@@ -8,7 +8,7 @@ const ENTRIES = [
     detail: (
       <>
         <p>Focus: Full-stack Development, Mobile App Development, Game Programming</p>
-        <p>English for Creative Arts (ECA) Program &mdash; completed 2024 &middot; GPA: 79.52/100</p>
+        <p>English for Creative Arts (ECA) Program, completed 2024 &middot; GPA: 79.52/100</p>
       </>
     ),
   },

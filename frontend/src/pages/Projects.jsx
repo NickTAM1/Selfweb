@@ -13,11 +13,13 @@ const PROJECTS = [
     summary:
       "A 3D top-down tower defense roguelike built around real fluid dynamics: a physically simulated boat has to survive waves of water-based enemies with their own StateTree-driven AI.",
     badges: ["Unreal Engine 5", "C++", "State Tree", "Physics Simulation", "Firebase"],
-    media: {
-      type: "video",
-      src: "/Selfweb/media/mobius-gameplay.mp4",
-      label: "UE5 Gameplay Capture",
-    },
+    media: [
+      { type: "video", src: "/Selfweb/media/mobius-gameplay.mp4", label: "UE5 Gameplay Capture" },
+      { type: "image", src: "/Selfweb/media/mobius-1.jpg", label: "Möbius Fish Screenshot 1" },
+      { type: "image", src: "/Selfweb/media/mobius-2.jpg", label: "Möbius Fish Screenshot 2" },
+      { type: "image", src: "/Selfweb/media/mobius-3.jpg", label: "Möbius Fish Screenshot 3" },
+      { type: "image", src: "/Selfweb/media/mobius-4.jpg", label: "Möbius Fish Screenshot 4" },
+    ],
     highlights: [
       "C++ StateTree AI with a direct-velocity + NavMesh hybrid movement model",
       "Custom boat buoyancy with smooth roll correction and self-righting torque",
@@ -104,7 +106,13 @@ BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
     summary:
       "A first-person kick fighter where momentum is the weapon: sprint, slide, and double-jump into enemies, kicking them back harder the faster you're moving.",
     badges: ["Unity", "C#", "Physics Mechanics", "AI Behavior"],
-    media: { type: "placeholder", label: "Unity Gameplay Capture" },
+    media: [
+      { type: "video", src: "/Selfweb/media/radswing-demo.mp4", label: "Radswing Gameplay Capture" },
+      { type: "image", src: "/Selfweb/media/radswing-1.jpg", label: "Radswing Screenshot 1" },
+      { type: "image", src: "/Selfweb/media/radswing-2.jpg", label: "Radswing Screenshot 2" },
+      { type: "image", src: "/Selfweb/media/radswing-3.jpg", label: "Radswing Screenshot 3" },
+      { type: "image", src: "/Selfweb/media/radswing-4.jpg", label: "Radswing Screenshot 4" },
+    ],
     highlights: [
       "Momentum-based kick (F) that scales knockback with player speed",
       "Three distinct enemy archetypes: Melee, Range, and Tank",
@@ -159,7 +167,13 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
     summary:
       "Simulates realistic ocean waves using FFT and the Phillips spectrum, exporting the results as animated 3D meshes for Blender.",
     badges: ["C++", "Fast Fourier Transform", "Phillips Spectrum", "3D Mesh Export"],
-    media: { type: "placeholder", label: "Blender Wave Render" },
+    media: [
+      { type: "video", src: "/Selfweb/media/fft-demo.mp4", label: "FFT Ocean Wave Render" },
+      { type: "image", src: "/Selfweb/media/fft-1.jpg", label: "FFT Ocean Screenshot 1" },
+      { type: "image", src: "/Selfweb/media/fft-2.jpg", label: "FFT Ocean Screenshot 2" },
+      { type: "image", src: "/Selfweb/media/fft-3.jpg", label: "FFT Ocean Screenshot 3" },
+      { type: "image", src: "/Selfweb/media/fft-4.jpg", label: "FFT Ocean Screenshot 4" },
+    ],
     highlights: [
       "Radix-2 Cooley-Tukey IFFT brings a per-frame heightmap from O(N⁴) down to O(N log N), making real-time generation practical",
       "Implemented the Phillips spectrum (wave scale, wind direction, frequency domain) from research papers",
@@ -263,7 +277,14 @@ export default function Projects() {
             index={i}
             onClick={() => openProject(project.id)}
           >
-            <span className="mono-label accent project-category">{project.categoryLabel}</span>
+            <div className="project-category-row">
+              <span className="mono-label accent project-category">
+                {project.categoryLabel}
+              </span>
+              <span className="mono-label media-gallery-badge">
+                ▶ {project.media.length} MEDIA
+              </span>
+            </div>
             <h2>{project.title}</h2>
             <p className="project-summary">{project.summary}</p>
             <div className="badge-row">
@@ -298,7 +319,7 @@ export default function Projects() {
           projects to stay sharp on the web and backend side: web scrapers,
           image-search tools, automation scripts, and AI-powered
           applications. It&apos;s ongoing, hands-on practice with the same
-          problem-solving habits &mdash; reading unfamiliar systems, breaking
+          problem-solving habits: reading unfamiliar systems, breaking
           problems down, and shipping something that works.
         </p>
         <div className="badge-row">

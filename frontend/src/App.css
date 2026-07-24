@@ -194,6 +194,8 @@ nav a:focus-visible {
 /* ---------- Buttons ---------- */
 
 .btn-glass {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -247,6 +249,40 @@ nav a:focus-visible {
 
 .btn-primary:hover {
   background: rgba(16, 185, 129, 0.3);
+}
+
+/* Anchor-as-button variant (Contact links, footer links) -- shares .btn-glass
+   sizing/appearance; this class is mainly a ripple hook plus a small gap for
+   the optional inline icon. */
+.btn-link {
+  gap: 8px;
+}
+
+.btn-link-icon {
+  flex: none;
+  display: inline-block;
+}
+
+/* ---------- Click "bubble" ripple ---------- */
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.45), rgba(52, 211, 153, 0) 70%);
+  pointer-events: none;
+  animation: ripple-pop 500ms var(--ease-out);
+}
+
+@keyframes ripple-pop {
+  from {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
 }
 
 /* ---------- Mono micro-label utility ---------- */
@@ -521,6 +557,8 @@ nav a:focus-visible {
 }
 
 .filter-tab {
+  position: relative;
+  overflow: hidden;
   min-height: 40px;
   padding: 6px 16px;
   border-radius: 999px;
@@ -560,6 +598,19 @@ nav a:focus-visible {
 .project-category {
   display: block;
   margin-bottom: 10px;
+}
+
+.project-category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.project-category-row .project-category {
+  margin-bottom: 0;
 }
 
 /* ---------- Compact project cards + grid ---------- */
@@ -616,9 +667,12 @@ nav a:focus-visible {
   box-shadow: var(--shadow-lift), var(--highlight-top);
   color: var(--text);
   opacity: 0;
-  transform: translateY(24px) scale(0.96);
+  /* No transform animation here -- Motion animates the "bubble" spring pop
+     on .project-modal-inner instead. Animating scale/translate on both the
+     container and the inner content at once would double up and fight each
+     other, so this container only ever handles a plain opacity fade. */
   /* `display: flex` above is intentionally unconditional (not scoped to
-     [open]) so the opacity/transform can animate smoothly on close instead
+     [open]) so the opacity can animate smoothly on close instead
      of vanishing instantly -- but that means this element stays laid out
      with real dimensions at inset:0 even while "closed". Without this rule
      it silently intercepts clicks over its centered footprint on the whole
@@ -626,8 +680,7 @@ nav a:focus-visible {
      pointer-events: none here, flipped back to auto by .project-modal[open]
      below, keeps it click-through except while actually open. */
   pointer-events: none;
-  transition: opacity var(--t-slow) var(--ease-emphasized),
-    transform var(--t-slow) var(--ease-emphasized), overlay var(--t-slow) allow-discrete,
+  transition: opacity var(--t-slow) var(--ease-emphasized), overlay var(--t-slow) allow-discrete,
     display var(--t-slow) allow-discrete;
 }
 
@@ -647,14 +700,12 @@ nav a:focus-visible {
 
 .project-modal[open] {
   opacity: 1;
-  transform: none;
   pointer-events: auto;
 }
 
 @starting-style {
   .project-modal[open] {
     opacity: 0;
-    transform: translateY(24px) scale(0.96);
   }
 }
 
@@ -687,6 +738,7 @@ nav a:focus-visible {
 
 .modal-close {
   position: absolute;
+  overflow: hidden;
   top: 14px;
   right: 14px;
   z-index: 2;
@@ -851,59 +903,169 @@ nav a:focus-visible {
   padding-top: 8px;
 }
 
-/* ---------- Media ---------- */
+/* ---------- Media gallery ---------- */
 
-.media-container {
+.media-gallery {
+  margin: 16px 0;
+}
+
+.media-stage {
   position: relative;
+  aspect-ratio: 16 / 9;
   border-radius: var(--r-md);
   overflow: hidden;
-  margin: 16px 0;
   border: 1px solid var(--glass-border);
-}
-
-.media-container img,
-.media-container video {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.media-placeholder {
-  aspect-ratio: 16 / 9;
   background: rgba(255, 255, 255, 0.03);
+}
+
+.media-stage-frame {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
 }
 
-.media-placeholder p {
-  color: var(--text);
-  opacity: 0.5;
-  margin: 0;
+.media-stage-frame img,
+.media-stage-frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-stage-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
   padding: 0 20px;
+}
+
+.media-stage-placeholder p {
+  color: var(--text);
+  opacity: 0.65;
+  margin: 0;
+  font-size: 14px;
+}
+
+.media-stage-placeholder code {
+  font-size: 13px;
 }
 
 .media-caption {
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 1;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.media-overlay {
+.media-nav {
   position: absolute;
-  inset: auto 0 0 0;
-  display: flex;
-  justify-content: space-between;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
   align-items: center;
-  padding: 10px 12px;
-  background: linear-gradient(to top, rgba(6, 9, 14, 0.85), transparent);
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(6, 9, 14, 0.55);
+  border: 1px solid var(--glass-border);
+  color: var(--text-h);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
 }
 
-.media-controls {
+.media-nav:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: var(--accent-border);
+}
+
+.media-nav:focus-visible {
+  outline: 2px solid var(--emerald-light);
+  outline-offset: 2px;
+}
+
+.media-nav-prev {
+  left: 10px;
+}
+
+.media-nav-next {
+  right: 10px;
+}
+
+.media-thumbs {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  margin-top: 10px;
+}
+
+.media-thumb {
+  position: relative;
+  overflow: hidden;
+  flex: none;
+  width: 64px;
+  height: 42px;
+  padding: 0;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.media-thumb-media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.media-thumb-placeholder .mono-label {
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.media-thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-h);
+  font-size: 14px;
+  background: rgba(6, 9, 14, 0.35);
+  pointer-events: none;
+}
+
+.media-thumb-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--emerald-light);
+  box-shadow: 0 0 0 2px var(--emerald-glow);
+  pointer-events: none;
+}
+
+.media-gallery-badge {
+  white-space: nowrap;
 }
 
 /* ---------- Collapsible code snippet viewer ---------- */
@@ -987,21 +1149,34 @@ nav a:focus-visible {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 12px;
   margin-bottom: 10px;
 }
 
-.site-footer a {
-  color: var(--text);
-  text-decoration: none;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
+.site-footer .footer-links .btn-glass {
+  font-size: 13px;
 }
 
-.site-footer a:hover,
-.site-footer a:focus-visible {
-  color: var(--emerald-light);
+/* ---------- Contact links ---------- */
+
+.contact-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contact-link-row .btn-glass {
+  flex: 1 1 220px;
+}
+
+@media (max-width: 640px) {
+  .contact-link-row {
+    flex-direction: column;
+  }
+
+  .contact-link-row .btn-glass {
+    width: 100%;
+  }
 }
 
 /* ---------- Contact form ---------- */

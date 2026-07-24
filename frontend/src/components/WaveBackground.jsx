@@ -10,10 +10,14 @@ void main() {
 // Layered fbm-style noise drifting slowly over time, tinted obsidian ->
 // emerald. Kept deliberately low-contrast so glass panels on top stay
 // readable.
+// u_mouse is normalized 0..1 canvas space; (-1,-1) means "no cursor yet" (or
+// reduced-motion, where interaction is intentionally disabled) and is pushed
+// far enough outside the unit square that the ripple term below is always ~0.
 const FRAGMENT_SRC = `
 precision mediump float;
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform vec2 u_mouse;
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -43,16 +47,38 @@ float fbm(vec2 p) {
 
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+  float aspect = u_resolution.x / u_resolution.y;
+
+  // Aspect-corrected distance from the cursor so the ripple rings are
+  // circular rather than stretched to the viewport's aspect ratio.
+  vec2 uvAspect = vec2(uv.x * aspect, uv.y);
+  vec2 mouseAspect = vec2(u_mouse.x * aspect, u_mouse.y);
+  float mouseDist = length(uvAspect - mouseAspect);
+
   vec2 p = uv * 3.0;
   float t = u_time * 0.035;
 
+  // Gentle warp of the sample point near the cursor -- pulls the fbm field
+  // outward/inward slightly so the wave visibly reacts, on top of the ripple
+  // rings below. Falls off smoothly with distance and fades to nothing when
+  // u_mouse is parked off-screen.
+  float warpFalloff = smoothstep(0.55, 0.0, mouseDist);
+  vec2 warpDir = normalize(uvAspect - mouseAspect + 1e-4);
+  p += warpDir * warpFalloff * 0.12;
+
   float wave = fbm(p + vec2(t, -t * 0.6));
   wave += 0.5 * sin(uv.x * 3.0 + t * 1.3) * sin(uv.y * 2.0 - t);
+
+  // Soft concentric ripple rings expanding from the cursor, faded by distance
+  // and by time-since-last-move via u_mouse itself going stale/off-screen.
+  float ripple = sin(mouseDist * 34.0 - u_time * 2.4) * smoothstep(0.6, 0.0, mouseDist);
+  wave += ripple * 0.08;
 
   vec3 obsidian = vec3(0.024, 0.035, 0.055);
   vec3 emerald = vec3(0.063, 0.725, 0.506);
 
   float glow = smoothstep(0.2, 0.85, wave) * 0.22;
+  glow += warpFalloff * 0.05;
   vec3 color = obsidian + emerald * glow;
 
   float vignette = smoothstep(1.1, 0.3, length(uv - 0.5));
@@ -128,10 +154,27 @@ export default function WaveBackground() {
     const positionLoc = gl.getAttribLocation(program, "a_position");
     const resolutionLoc = gl.getUniformLocation(program, "u_resolution");
     const timeLoc = gl.getUniformLocation(program, "u_time");
+    const mouseLoc = gl.getUniformLocation(program, "u_mouse");
 
     let rafId = null;
     let disposed = false;
     const startTime = performance.now();
+
+    // Cursor position, normalized to 0..1 canvas space. `mouseTarget` is the
+    // raw latest pointer position (written by the pointermove listener below,
+    // read once per rendered frame -- never used to trigger GL work directly
+    // so a very high pointermove frequency still costs just a couple of
+    // float writes). `mouseSmooth` is lerped toward it once per frame in the
+    // render loop so the ripple follows fluidly instead of jumping. Both
+    // start off-screen (-1,-1) so no ripple is visible until the user
+    // actually moves the cursor.
+    const mouseTarget = { x: -1, y: -1 };
+    const mouseSmooth = { x: -1, y: -1 };
+
+    function handlePointerMove(e) {
+      mouseTarget.x = e.clientX / window.innerWidth;
+      mouseTarget.y = 1 - e.clientY / window.innerHeight;
+    }
 
     // Internal render resolution is capped and downscaled: this is a soft,
     // blurred backdrop, so it never needs to be pixel-crisp.
@@ -154,11 +197,17 @@ export default function WaveBackground() {
       gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
       gl.uniform2f(resolutionLoc, canvas.width, canvas.height);
       gl.uniform1f(timeLoc, time);
+      gl.uniform2f(mouseLoc, mouseSmooth.x, mouseSmooth.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
     function renderLoop(now) {
       if (disposed) return;
+      // Lerp the smoothed cursor position toward the latest raw pointer
+      // position once per frame -- this is the only per-frame mouse work,
+      // keeping the pointermove handler itself trivial.
+      mouseSmooth.x += (mouseTarget.x - mouseSmooth.x) * 0.08;
+      mouseSmooth.y += (mouseTarget.y - mouseSmooth.y) * 0.08;
       drawFrame((now - startTime) / 1000);
       rafId = requestAnimationFrame(renderLoop);
     }
@@ -166,9 +215,11 @@ export default function WaveBackground() {
     resize();
 
     if (reduceMotion) {
-      // Single static frame -- no rAF loop at all.
+      // Single static frame -- no rAF loop at all, and no mouse listener is
+      // ever attached (see below), so u_mouse stays at its off-screen default.
       drawFrame(0);
     } else {
+      window.addEventListener("pointermove", handlePointerMove, { passive: true });
       rafId = requestAnimationFrame(renderLoop);
     }
 
@@ -210,6 +261,7 @@ export default function WaveBackground() {
     return () => {
       disposed = true;
       if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("resize", handleResize);
       canvas.removeEventListener("webglcontextlost", handleContextLost);
