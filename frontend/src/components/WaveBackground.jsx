@@ -56,29 +56,36 @@ void main() {
   float mouseDist = length(uvAspect - mouseAspect);
 
   vec2 p = uv * 3.0;
-  float t = u_time * 0.035;
+  // Flow speed moderately increased over the original 0.035 -- still slow
+  // and organic, but with clearly perceptible ambient drift.
+  float t = u_time * 0.055;
 
   // Gentle warp of the sample point near the cursor -- pulls the fbm field
   // outward/inward slightly so the wave visibly reacts, on top of the ripple
   // rings below. Falls off smoothly with distance and fades to nothing when
-  // u_mouse is parked off-screen.
+  // u_mouse is parked off-screen. Displacement strengthened (0.12 -> 0.18)
+  // so the cursor reads as clearly interactive.
   float warpFalloff = smoothstep(0.55, 0.0, mouseDist);
   vec2 warpDir = normalize(uvAspect - mouseAspect + 1e-4);
-  p += warpDir * warpFalloff * 0.12;
+  p += warpDir * warpFalloff * 0.18;
 
   float wave = fbm(p + vec2(t, -t * 0.6));
-  wave += 0.5 * sin(uv.x * 3.0 + t * 1.3) * sin(uv.y * 2.0 - t);
+  wave += 0.6 * sin(uv.x * 3.0 + t * 1.5) * sin(uv.y * 2.0 - t * 1.2);
 
   // Soft concentric ripple rings expanding from the cursor, faded by distance
   // and by time-since-last-move via u_mouse itself going stale/off-screen.
-  float ripple = sin(mouseDist * 34.0 - u_time * 2.4) * smoothstep(0.6, 0.0, mouseDist);
-  wave += ripple * 0.08;
+  // Slightly faster and stronger than before so the ripple reads clearly.
+  float ripple = sin(mouseDist * 36.0 - u_time * 3.0) * smoothstep(0.6, 0.0, mouseDist);
+  wave += ripple * 0.11;
 
   vec3 obsidian = vec3(0.024, 0.035, 0.055);
   vec3 emerald = vec3(0.063, 0.725, 0.506);
 
+  // Overall glow strength kept close to the original -- flow/ripple carry the
+  // extra "aliveness" so the canvas stays dark and low-contrast under glass
+  // panels and text.
   float glow = smoothstep(0.2, 0.85, wave) * 0.22;
-  glow += warpFalloff * 0.05;
+  glow += warpFalloff * 0.07;
   vec3 color = obsidian + emerald * glow;
 
   float vignette = smoothstep(1.1, 0.3, length(uv - 0.5));

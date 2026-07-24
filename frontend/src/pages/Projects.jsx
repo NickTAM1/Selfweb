@@ -255,7 +255,13 @@ export default function Projects() {
         the full engineering breakdown.
       </p>
 
-      <div className="filter-tabs" role="group" aria-label="Filter projects by category">
+      <Reveal
+        as="div"
+        className="filter-tabs"
+        role="group"
+        aria-label="Filter projects by category"
+        index={0}
+      >
         {FILTERS.map((label) => (
           <button
             key={label}
@@ -267,7 +273,7 @@ export default function Projects() {
             {label}
           </button>
         ))}
-      </div>
+      </Reveal>
 
       <div className="project-grid">
         {visibleProjects.map((project, i) => (

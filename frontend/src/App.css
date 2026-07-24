@@ -4,6 +4,16 @@
   flex: 1;
 }
 
+/* Wraps the animated route content (see AnimatedRoutes in App.jsx). The
+   slide transition animates `x` via transform, which never affects layout
+   flow/width, but this belt-and-suspenders rule guarantees no sliver of
+   horizontal scroll can appear during the transition even if a page's own
+   content is briefly wider than the viewport mid-animation. */
+.route-viewport {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .container {
   max-width: 760px;
   margin: 0 auto;
@@ -261,6 +271,53 @@ nav a:focus-visible {
 .btn-link-icon {
   flex: none;
   display: inline-block;
+}
+
+/* Icon-only glass button (Contact links, footer links). Square, centered
+   icon, no visible label -- the accessible name comes from aria-label and
+   sighted users get a CSS tooltip from data-tooltip (see ::after below). */
+.btn-icon {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: var(--r-md);
+  gap: 0;
+}
+
+.btn-icon .btn-link-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* CSS tooltip: hidden by default, fades in above the button on hover/focus.
+   Positioned with a centered transform rather than shifting layout, and the
+   page-level `body { overflow-x: hidden }` (index.css) clips it safely if a
+   button near the viewport edge would otherwise let it peek past the edge. */
+.btn-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translate(-50%, 4px);
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
+  background: rgba(6, 9, 14, 0.92);
+  border: 1px solid var(--glass-border);
+  color: var(--text-h);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+  z-index: 5;
+}
+
+.btn-icon:hover::after,
+.btn-icon:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 /* ---------- Click "bubble" ripple ---------- */
@@ -1162,21 +1219,9 @@ nav a:focus-visible {
 .contact-link-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-}
-
-.contact-link-row .btn-glass {
-  flex: 1 1 220px;
-}
-
-@media (max-width: 640px) {
-  .contact-link-row {
-    flex-direction: column;
-  }
-
-  .contact-link-row .btn-glass {
-    width: 100%;
-  }
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
 }
 
 /* ---------- Contact form ---------- */
@@ -1214,16 +1259,9 @@ nav a:focus-visible {
 
 /* ---------- Motion utilities ---------- */
 
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
+/* Scroll reveals are driven entirely by Motion (see Reveal.jsx) via inline
+   style opacity/transform -- no CSS class toggling here anymore, so there is
+   nothing in this stylesheet that can leave content stuck hidden. */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1232,11 +1270,6 @@ nav a:focus-visible {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-  }
-
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
   }
 
   /* Modal: opacity fade only, no motion, even across the open/closed states

@@ -68,18 +68,22 @@ export default function Home() {
   return (
     <div className="container">
       <div className="hero">
-        <span className="status-pill">
+        <Reveal as="span" className="status-pill" index={0}>
           <span className="status-dot" aria-hidden="true" />
           <span className="mono-label accent">Open to work &middot; Remote worldwide</span>
-        </span>
-        <span className="hero-eyebrow">Junior Software Developer</span>
-        <h1>Chi Lek (Nick) Tam</h1>
-        <p className="hero-pitch">
+        </Reveal>
+        <Reveal as="span" className="hero-eyebrow" index={1}>
+          Junior Software Developer
+        </Reveal>
+        <Reveal as="h1" index={2}>
+          Chi Lek (Nick) Tam
+        </Reveal>
+        <Reveal as="p" className="hero-pitch" index={3}>
           Full-stack developer who also builds game systems: UE5 physics
           and AI, plus web, mobile, and backend. I build the parts under the
           hood and figure out why they break.
-        </p>
-        <div className="hero-cta">
+        </Reveal>
+        <Reveal as="div" className="hero-cta" index={4}>
           <Link className="btn-glass btn-primary" to="/projects">
             View Projects
           </Link>
@@ -89,15 +93,13 @@ export default function Home() {
           <Link className="btn-glass" to="/contact">
             Contact
           </Link>
-        </div>
-        <p className="hero-status">
+        </Reveal>
+        <Reveal as="p" className="hero-status" index={5}>
           Based in Macau &middot; Open to remote software roles worldwide
-        </p>
+        </Reveal>
       </div>
 
-      <Reveal index={0}>
-        <StatStrip stats={STATS} />
-      </Reveal>
+      <StatStrip stats={STATS} />
 
       <Reveal className="box" index={1}>
         <h2>About</h2>
