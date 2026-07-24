@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 
 const STEP_DELAY = 0.06;
 const MAX_DELAY = 0.36;
@@ -13,9 +13,6 @@ const MAX_DELAY = 0.36;
  *   which covers content that is already in the viewport on first paint
  *   (e.g. above-the-fold hero/stat elements) as well as content scrolled
  *   into view later. `once: true` means it only ever needs to fire once.
- * - `prefers-reduced-motion` (via `useReducedMotion`) skips Motion entirely
- *   and renders the plain static tag, fully visible immediately -- no
- *   opacity/scale/transform is ever applied in that mode.
  * - If `IntersectionObserver` isn't available (the mechanism `whileInView`
  *   relies on under the hood), we also skip Motion and render the plain
  *   static tag so nothing depends on an API that might not exist.
@@ -27,11 +24,10 @@ export default function Reveal({
   className = "",
   ...rest
 }) {
-  const shouldReduceMotion = useReducedMotion();
   const noObserverSupport =
     typeof window !== "undefined" && typeof IntersectionObserver === "undefined";
 
-  if (shouldReduceMotion || noObserverSupport) {
+  if (noObserverSupport) {
     return (
       <Tag className={className} {...rest}>
         {children}

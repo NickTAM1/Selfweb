@@ -12,8 +12,8 @@ const RIPPLE_SELECTOR = ".btn-glass, .filter-tab, .view-details-btn, .modal-clos
  * calls preventDefault/stopPropagation, so it can never interfere with the
  * button's real click behavior (navigation, modal open, form submit, etc).
  *
- * Respects prefers-reduced-motion: when the user has that set, no ripple
- * spans are created at all.
+ * Always fires on click/tap, regardless of the OS reduced-motion setting --
+ * this is a short, deliberate, interaction-triggered micro-interaction.
  */
 export default function useRipple() {
   useEffect(() => {
@@ -21,15 +21,7 @@ export default function useRipple() {
       return undefined;
     }
 
-    function reducedMotion() {
-      return (
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      );
-    }
-
     function handlePointerDown(e) {
-      if (reducedMotion()) return;
       // Only react to the primary button / primary touch contact.
       if (e.button !== undefined && e.button !== 0) return;
 

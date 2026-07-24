@@ -1271,16 +1271,86 @@ nav a:focus-visible {
     transition-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
 
-  /* Modal: opacity fade only, no motion, even across the open/closed states
-     (not just the transition speed) since the animated properties differ. */
-  .project-modal,
-  .project-modal[open] {
-    transform: none !important;
+/* Deliberate exemption from the blanket reduced-motion rule above: these are
+   short, click/hover-triggered micro-interactions (buttons, cards, the
+   ripple, the modal's bubble-pop-open, the cursor glow), not continuous or
+   scroll-linked motion, so they always animate the same way regardless of
+   the OS reduced-motion setting. Class selectors are more specific than the
+   universal `*` selector above, so `!important` here reliably wins over the
+   blanket `!important` rule regardless of source order. Durations/easings
+   below are copied verbatim from each selector's normal (non-reduced-motion)
+   rule earlier in this file -- keep them in sync if those change. Continuous
+   / looping / scroll-linked motion (page-route transitions, the WebGL wave
+   background, the marquee, the status-dot pulse) is intentionally NOT
+   exempted here and keeps respecting prefers-reduced-motion via its own
+   dedicated rules elsewhere in this file. */
+@media (prefers-reduced-motion: reduce) {
+  nav a {
+    transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out) !important;
+  }
+
+  .btn-glass {
+    transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out) !important;
+  }
+
+  .btn-glass:hover {
+    transform: translateY(-2px) !important;
+  }
+
+  .btn-glass:active {
+    transform: scale(0.97) !important;
+    transition: transform 60ms var(--ease-out) !important;
+  }
+
+  .btn-icon::after {
+    transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out) !important;
+  }
+
+  .filter-tab {
+    transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out) !important;
+  }
+
+  .filter-tab:active {
+    transform: scale(0.97) !important;
+  }
+
+  .modal-close {
+    transition: background var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out) !important;
+  }
+
+  .modal-close:hover {
+    transform: translateY(-1px) !important;
+  }
+
+  .modal-close:active {
+    transform: scale(0.97) !important;
+  }
+
+  .ripple {
+    animation: ripple-pop 500ms var(--ease-out) !important;
+  }
+
+  .box::after {
+    transition: opacity var(--t-fast) var(--ease-out) !important;
+  }
+
+  .box:hover::after {
+    opacity: 1 !important;
+  }
+
+  .project-card-compact {
+    transition: transform var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out) !important;
   }
 
   .project-card-compact:hover {
-    transform: none !important;
+    transform: translateY(-3px) !important;
   }
 }
 

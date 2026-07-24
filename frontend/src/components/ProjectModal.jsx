@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import MediaGallery from "./MediaGallery.jsx";
 
 const MODAL_VARIANTS = {
@@ -60,7 +60,6 @@ function safeClose(dialog) {
 export default function ProjectModal({ project, onClose }) {
   const dialogRef = useRef(null);
   const [renderedProject, setRenderedProject] = useState(project);
-  const reduceMotion = useReducedMotion();
 
   // Keep the dialog's contents in sync when a project is selected. Setting this
   // during render (not in an effect) means the content is correct before the
@@ -177,11 +176,7 @@ export default function ProjectModal({ project, onClose }) {
           variants={MODAL_VARIANTS}
           initial="closed"
           animate={project ? "open" : "closed"}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { type: "spring", stiffness: 420, damping: 30 }
-          }
+          transition={{ type: "spring", stiffness: 420, damping: 30 }}
         >
           <button
             type="button"

@@ -110,36 +110,42 @@ export default function App() {
       <AnimatedRoutes />
       <footer className="site-footer">
         <div className="footer-links">
-          <a
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://github.com/NickTAM1"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub (NickTAM1)"
             data-tooltip="GitHub (NickTAM1)"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="github" />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://github.com/HUKLIA"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub (HUKLIA)"
             data-tooltip="GitHub (HUKLIA)"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="github" />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://www.linkedin.com/in/chilek-tam-huzi"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
             data-tooltip="LinkedIn"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="linkedin" />
-          </a>
+          </motion.a>
         </div>
         <p>&copy; {new Date().getFullYear()} Chi Lek (Nick) Tam</p>
       </footer>

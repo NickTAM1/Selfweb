@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import Reveal from "../components/Reveal.jsx";
 
 const ICON_PATHS = {
@@ -39,44 +40,52 @@ export default function Contact() {
       <Reveal className="box" index={0}>
         <h2>Get in Touch</h2>
         <div className="contact-link-row">
-          <a
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="mailto:2584718806q@gmail.com"
             aria-label="Email"
             data-tooltip="Email"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="mail" />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://www.linkedin.com/in/chilek-tam-huzi"
             target="_blank"
             rel="noreferrer"
             aria-label="LinkedIn"
             data-tooltip="LinkedIn"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="linkedin" />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://github.com/NickTAM1"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub (NickTAM1)"
             data-tooltip="GitHub (NickTAM1)"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="github" />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://github.com/HUKLIA"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub (HUKLIA)"
             data-tooltip="GitHub (HUKLIA)"
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
           >
             <Icon name="github" />
-          </a>
+          </motion.a>
         </div>
       </Reveal>
 
