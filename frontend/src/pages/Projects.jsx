@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Reveal from "../components/Reveal.jsx";
 import ProjectModal from "../components/ProjectModal.jsx";
 
-const FILTERS = ["All", "UE5", "Unity", "Graphics"];
+const FILTERS = ["All", "UE5", "Unity", "Graphics", "Tools"];
 
 const PROJECTS = [
   {
@@ -269,6 +269,94 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       </details>
     ),
   },
+  {
+    id: "unreal-devtool",
+    category: "Tools",
+    categoryLabel: "RUST // DEV TOOLING",
+    title: "Unreal DevTool",
+    summary:
+      "A Windows desktop app that consolidates UE5 packaging, VS project regeneration, Git management, and build diagnostics into a single GUI, with a local-LLM chat assistant built in.",
+    badges: ["Rust", "egui", "Unreal Engine 5", "Git Automation", "Local LLM"],
+    media: [
+      { type: "image", src: "/Selfweb/media/unrealdevtool-1.jpg", label: "Dashboard tab" },
+      { type: "image", src: "/Selfweb/media/unrealdevtool-2.jpg", label: "Package tab" },
+      { type: "image", src: "/Selfweb/media/unrealdevtool-3.jpg", label: "Git tab" },
+      { type: "image", src: "/Selfweb/media/unrealdevtool-4.jpg", label: "Chat / AI assistant tab" },
+    ],
+    highlights: [
+      "Automated fix for a real UE5 UAT/UBT bug -- spaces in file paths -- via NTFS directory junctions",
+      "Built-in AI chat assistant that auto-detects local Ollama/LM Studio servers",
+      "One tool for packaging, Git, and build diagnostics, self-updating via GitHub Actions releases",
+    ],
+    detail: (
+      <details className="deep-dive">
+        <summary>Engineering deep-dive</summary>
+        <div className="deep-dive-body">
+          <p>
+            <strong>Problem:</strong> UE5 developers juggle several
+            disconnected tools and manual steps: regenerating Visual Studio
+            project files, manually tracking build versions and packaging,
+            running Git operations, and hunting through build logs when
+            something breaks, with no single place to see project health or
+            get unblocked.
+          </p>
+
+          <p className="deep-dive-subhead">
+            <strong>Key decisions</strong>
+          </p>
+          <ul>
+            <li>
+              <strong>Rust + egui for the UI.</strong> A deliberate choice to
+              learn a systems language and an immediate-mode GUI framework
+              rather than staying in a comfort-zone stack.
+            </li>
+            <li>
+              <strong>NTFS directory junctions to solve the UAT/UBT
+              spaces-in-path build failure.</strong> Unreal&apos;s build
+              tooling has a real, documented limitation where file paths
+              containing spaces cause build failures. Instead of just telling
+              users to avoid spaces in their folder names, the tool
+              automatically creates space-free NTFS directory junctions as
+              path aliases so the build system never sees the problematic
+              path.
+            </li>
+            <li>
+              <strong>Local-LLM chat (Ollama/LM Studio auto-detection) over a
+              cloud AI API.</strong> Keeps the assistant free and usable
+              offline for anyone running the tool, at the cost of needing a
+              local model server running.
+            </li>
+          </ul>
+
+          <p>
+            <strong>Result:</strong> ships as a self-updating ~75MB Windows
+            executable (bundling rclone for its Google Drive-based
+            distribution), with GitHub Actions automating release builds and
+            the app checking for updates on startup and every 5 minutes
+            after, replacing itself in place. MIT licensed.
+          </p>
+          <p>
+            <strong>Honest note:</strong> this was my first real project in
+            Rust, and my first time writing PowerShell/cmd automation and
+            working with Unreal&apos;s UAT/UBT internals closely enough to
+            work around one of its real bugs. A deliberate stretch, not a
+            comfort-zone project.
+          </p>
+
+          <div className="project-actions">
+            <a
+              className="btn-glass"
+              href="https://github.com/HUKLIA/UnrealDevtool"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Source on GitHub
+            </a>
+          </div>
+        </div>
+      </details>
+    ),
+  },
 ];
 
 export default function Projects() {
@@ -293,9 +381,9 @@ export default function Projects() {
     <div className="container">
       <h1>Projects</h1>
       <p>
-        Möbius Fish has a real gameplay capture; Radswing and the FFT
-        generator are placeholders until clips are added. Tap a project for
-        the full engineering breakdown.
+        Möbius Fish has a real gameplay capture; Radswing, the FFT generator,
+        and Unreal DevTool are placeholders until clips are added. Tap a
+        project for the full engineering breakdown.
       </p>
 
       <Reveal

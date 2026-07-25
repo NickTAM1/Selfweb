@@ -152,7 +152,8 @@ textarea {
   width: 100%;
   max-width: 320px;
   box-sizing: border-box;
-  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
 }
 
 input:focus,
@@ -160,6 +161,7 @@ textarea:focus {
   outline: none;
   border-color: var(--accent-border);
   background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px var(--emerald-glow);
 }
 
 input:focus-visible,

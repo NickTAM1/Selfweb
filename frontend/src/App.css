@@ -336,18 +336,22 @@ nav a:focus-visible {
   display: inline-flex;
 }
 
-/* Positioning lives on this plain (non-motion) anchor, centered under the
-   trigger via `left: 50%` + a JS-computed inline translateX (see
-   IconPopover.jsx) that also clamps the panel inside the viewport near an
-   edge. Kept separate from .icon-popover-panel below because that element is
-   Motion-animated (opacity/scale/y) -- Motion writes its own inline
-   `transform`, which would silently override a CSS `transform` on the same
-   node, breaking the centering. */
+/* This anchor is portaled into document.body (see IconPopover.jsx) rather
+   than nested inside `.icon-popover`/`.box`, so it escapes the stacking
+   context that `.box`'s `backdrop-filter` creates -- a nested, merely
+   higher z-index could never win against a later sibling `.box`, which
+   paints as its own separate stacking context on top regardless. `position`,
+   `top`, `left`, and the centering `translateX` are all set inline by JS
+   from the trigger's real getBoundingClientRect(), since this element no
+   longer lives in normal flow under its trigger. z-index only needs to clear
+   this portal's own siblings at the body level now (everything else in the
+   app), not fight a specific nested stacking context, so it can be a plain
+   high value. Kept separate from .icon-popover-panel below because that
+   element is Motion-animated (opacity/scale/y) -- Motion writes its own
+   inline `transform`, which would silently override a CSS `transform` on the
+   same node, breaking the centering. */
 .icon-popover-anchor {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 50%;
-  z-index: 20;
+  z-index: 1000;
 }
 
 .icon-popover-panel {
@@ -1046,6 +1050,17 @@ nav a:focus-visible {
   color: var(--emerald-light);
 }
 
+/* Wraps an optional real "View Source on GitHub" link at the end of a
+   project's deep-dive (only projects with a public repo get one -- see
+   Projects.jsx). Flex + wrap so it never causes horizontal overflow next to
+   other action buttons on narrow viewports. */
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
 /* ---------- Media gallery ---------- */
 
 .media-gallery {
@@ -1164,6 +1179,21 @@ nav a:focus-visible {
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
+  /* Scale on hover/tap is already handled by Motion (whileHover/whileTap in
+     MediaGallery.jsx), but the border and focus ring had no treatment at
+     all -- every other interactive element in the app defines a
+     :focus-visible outline, this one silently relied on the browser
+     default. */
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+
+.media-thumb:hover {
+  border-color: var(--accent-border);
+}
+
+.media-thumb:focus-visible {
+  outline: 2px solid var(--emerald-light);
+  outline-offset: 2px;
 }
 
 .media-thumb-media {
