@@ -2,9 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
 const STAGE_VARIANTS = {
-  enter: (dir) => ({ opacity: 0, scale: 0.97, x: dir >= 0 ? 24 : -24 }),
+  enter: (dir) => ({ opacity: 0, scale: 0.97, x: dir >= 0 ? 56 : -56 }),
   center: { opacity: 1, scale: 1, x: 0 },
-  exit: (dir) => ({ opacity: 0, scale: 0.97, x: dir >= 0 ? -24 : 24 }),
+  exit: (dir) => ({ opacity: 0, scale: 0.97, x: dir >= 0 ? -56 : 56 }),
 };
 
 const STAGE_VARIANTS_REDUCED = {
@@ -93,7 +93,7 @@ export default function MediaGallery({ items }) {
   const variants = reduceMotion ? STAGE_VARIANTS_REDUCED : STAGE_VARIANTS;
   const transition = reduceMotion
     ? { duration: 0 }
-    : { type: "spring", stiffness: 320, damping: 34 };
+    : { type: "spring", stiffness: 220, damping: 28 };
 
   return (
     <div className="media-gallery">

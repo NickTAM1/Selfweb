@@ -283,26 +283,26 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       "A Windows desktop app that consolidates UE5 packaging, VS project regeneration, Git management, and build diagnostics into a single GUI, with a local-LLM chat assistant built in.",
     badges: ["Rust", "egui", "Unreal Engine 5", "Git Automation", "Local LLM"],
     media: [
-      { type: "video", src: "/Selfweb/media/unrealdevtool-demo.mp4", label: "Unreal DevTool — live demo" },
+      { type: "video", src: "/Selfweb/media/unrealdevtool-demo.mp4", label: "Live Demo" },
       {
         type: "image",
         src: "/Selfweb/media/unrealdevtool-1.jpg",
-        label: "Dashboard — project/engine detection, preflight diagnostics",
+        label: "Dashboard",
       },
       {
         type: "image",
         src: "/Selfweb/media/unrealdevtool-2.jpg",
-        label: "Package — build versioning, NTFS-junction space-path fix",
+        label: "Package",
       },
       {
         type: "image",
         src: "/Selfweb/media/unrealdevtool-3.jpg",
-        label: "Git — commit/push/sync, commit activity",
+        label: "Git",
       },
       {
         type: "image",
         src: "/Selfweb/media/unrealdevtool-4.jpg",
-        label: "Chat — local LLM dev assistant (LM Studio/Ollama)",
+        label: "Chat",
       },
     ],
     highlights: [
@@ -388,10 +388,10 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       "A web-based shopping mall application built with Laravel: user auth, an admin-managed product catalog with image uploads, and a shopping cart. One of my earlier full-stack projects.",
     badges: ["PHP", "Laravel", "MySQL", "Vue 2", "Bootstrap"],
     media: [
-      { type: "image", src: "/Selfweb/media/shoppingmall-1.jpg", label: "Storefront / product catalog" },
-      { type: "image", src: "/Selfweb/media/shoppingmall-2.jpg", label: "Product detail page" },
-      { type: "image", src: "/Selfweb/media/shoppingmall-3.jpg", label: "Shopping cart" },
-      { type: "image", src: "/Selfweb/media/shoppingmall-4.jpg", label: "Admin product management" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-1.jpg", label: "Storefront" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-2.jpg", label: "Product" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-3.jpg", label: "Cart" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-4.jpg", label: "Admin" },
     ],
     highlights: [
       "Full auth flow -- registration, login, password reset, email verification via laravel/ui",
@@ -418,6 +418,34 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
             One of my earlier full-stack projects, exploring Laravel&apos;s
             MVC conventions, auth scaffolding, and a Vue-driven frontend.
           </p>
+
+          <details className="code-viewer panel">
+            <summary>View product upload handler (real source)</summary>
+            <pre>{`// Real source: app/Http/Controllers/ProductController.php
+public function add() {
+    $file = Request::file('file');
+    $extension = $file->getClientOriginalExtension();
+    Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
+
+    $entry = new \\App\\File();
+    $entry->mime = $file->getClientMimeType();
+    $entry->original_filename = $file->getClientOriginalName();
+    $entry->filename = $file->getFilename().'.'.$extension;
+
+    $entry->save();
+
+    $product  = new Product();
+    $product->file_id=$entry->id;
+    $product->name =Request::input('name');
+    $product->description =Request::input('description');
+    $product->price =Request::input('price');
+    $product->imageurl =Request::input('imageurl');
+
+    $product->save();
+
+    return redirect('/admin/products');
+}`}</pre>
+          </details>
         </div>
       </details>
     ),

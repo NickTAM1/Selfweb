@@ -548,11 +548,28 @@ nav a:focus-visible {
 
 .stat-tile {
   position: relative;
-  background: var(--code-bg);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
   border: 1px solid var(--glass-border);
   border-radius: var(--r-md);
+  box-shadow: var(--shadow-lift), var(--highlight-top);
   padding: 18px 16px;
   text-align: left;
+}
+
+.stat-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .stat-value {
@@ -1121,6 +1138,10 @@ nav a:focus-visible {
   left: 10px;
   z-index: 2;
   pointer-events: none;
+  max-width: calc(100% - 20px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .media-nav {
