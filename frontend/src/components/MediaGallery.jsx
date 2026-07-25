@@ -123,6 +123,8 @@ export default function MediaGallery({ items }) {
               <img
                 src={active.src}
                 alt={active.label || `Project media ${index + 1}`}
+                loading="lazy"
+                decoding="async"
                 onError={() => setStageError((prev) => ({ ...prev, [active.src]: true }))}
               />
             )}
@@ -168,7 +170,7 @@ export default function MediaGallery({ items }) {
                 aria-label={item.label || `Media item ${i + 1}`}
                 onClick={() => goTo(i)}
                 whileHover={reduceMotion ? undefined : { scale: 1.08 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.94 }}
+                whileTap={reduceMotion ? undefined : { scale: 0.9 }}
               >
                 {broken ? (
                   <ThumbPlaceholder index={i} />
@@ -186,6 +188,8 @@ export default function MediaGallery({ items }) {
                     src={item.src}
                     alt=""
                     aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
                     onError={() => setThumbError((prev) => ({ ...prev, [item.src]: true }))}
                   />
                 )}

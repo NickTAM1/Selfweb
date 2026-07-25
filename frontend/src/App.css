@@ -224,8 +224,14 @@ nav a:focus-visible {
   font-size: 14px;
   text-decoration: none;
   cursor: pointer;
-  transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out),
-    border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
+  /* transform uses a bouncier easing than the other properties so releasing
+     a press (going from :active's scale(0.93) back to the resting state)
+     overshoots scale(1) slightly before settling -- a CSS-only spring-release
+     "pop". :active itself overrides this with a fast linear-ish squeeze-in
+     (see below) so only the release bounces, not the press. */
+  transition: transform var(--t-fast) cubic-bezier(0.34, 1.56, 0.64, 1),
+    background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
 }
 
 .btn-glass:hover {
@@ -236,7 +242,7 @@ nav a:focus-visible {
 }
 
 .btn-glass:active {
-  transform: scale(0.97);
+  transform: scale(0.93);
   transition: transform 60ms var(--ease-out);
 }
 
@@ -320,21 +326,81 @@ nav a:focus-visible {
   transform: translate(-50%, 0);
 }
 
+/* ---------- Icon popover (e.g. the merged GitHub button) ---------- */
+
+.icon-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Positioning lives on this plain (non-motion) anchor, centered under the
+   trigger via `left: 50%` + a JS-computed inline translateX (see
+   IconPopover.jsx) that also clamps the panel inside the viewport near an
+   edge. Kept separate from .icon-popover-panel below because that element is
+   Motion-animated (opacity/scale/y) -- Motion writes its own inline
+   `transform`, which would silently override a CSS `transform` on the same
+   node, breaking the centering. */
+.icon-popover-anchor {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  z-index: 20;
+}
+
+.icon-popover-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 160px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 6px;
+  border-radius: var(--r-md);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lift), var(--highlight-top);
+}
+
+.icon-popover-item {
+  display: block;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+
+.icon-popover-item:hover,
+.icon-popover-item:focus-visible {
+  color: var(--text-h);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.icon-popover-item:focus-visible {
+  outline: 2px solid var(--emerald-light);
+  outline-offset: -2px;
+}
+
 /* ---------- Click "bubble" ripple ---------- */
 
 .ripple {
   position: absolute;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.45), rgba(52, 211, 153, 0) 70%);
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.5), rgba(52, 211, 153, 0) 70%);
   pointer-events: none;
-  animation: ripple-pop 500ms var(--ease-out);
+  animation: ripple-pop 560ms var(--ease-out);
 }
 
 @keyframes ripple-pop {
   from {
     transform: translate(-50%, -50%) scale(0);
-    opacity: 0.55;
+    opacity: 0.65;
   }
   to {
     transform: translate(-50%, -50%) scale(1);
@@ -629,7 +695,7 @@ nav a:focus-visible {
   text-transform: uppercase;
   cursor: pointer;
   transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out),
-    border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+    border-color var(--t-fast) var(--ease-out), transform var(--t-fast) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .filter-tab:hover {
@@ -638,7 +704,8 @@ nav a:focus-visible {
 }
 
 .filter-tab:active {
-  transform: scale(0.97);
+  transform: scale(0.93);
+  transition: transform 60ms var(--ease-out);
 }
 
 .filter-tab.active {
@@ -811,7 +878,7 @@ nav a:focus-visible {
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  transition: background var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out),
+  transition: background var(--t-fast) var(--ease-out), transform var(--t-fast) cubic-bezier(0.34, 1.56, 0.64, 1),
     border-color var(--t-fast) var(--ease-out);
 }
 
@@ -822,7 +889,8 @@ nav a:focus-visible {
 }
 
 .modal-close:active {
-  transform: scale(0.97);
+  transform: scale(0.93);
+  transition: transform 60ms var(--ease-out);
 }
 
 .modal-close:focus-visible {
@@ -1245,6 +1313,10 @@ nav a:focus-visible {
   margin-bottom: 0;
 }
 
+.form-status-success {
+  color: var(--emerald-light);
+}
+
 /* ---------- WebGL ambient background ---------- */
 
 .wave-background {
@@ -1293,8 +1365,9 @@ nav a:focus-visible {
   }
 
   .btn-glass {
-    transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out),
-      border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out) !important;
+    transition: transform var(--t-fast) cubic-bezier(0.34, 1.56, 0.64, 1),
+      background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out),
+      box-shadow var(--t-fast) var(--ease-out) !important;
   }
 
   .btn-glass:hover {
@@ -1302,7 +1375,7 @@ nav a:focus-visible {
   }
 
   .btn-glass:active {
-    transform: scale(0.97) !important;
+    transform: scale(0.93) !important;
     transition: transform 60ms var(--ease-out) !important;
   }
 
@@ -1312,15 +1385,16 @@ nav a:focus-visible {
 
   .filter-tab {
     transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out),
-      border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out) !important;
+      border-color var(--t-fast) var(--ease-out), transform var(--t-fast) cubic-bezier(0.34, 1.56, 0.64, 1) !important;
   }
 
   .filter-tab:active {
-    transform: scale(0.97) !important;
+    transform: scale(0.93) !important;
+    transition: transform 60ms var(--ease-out) !important;
   }
 
   .modal-close {
-    transition: background var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out),
+    transition: background var(--t-fast) var(--ease-out), transform var(--t-fast) cubic-bezier(0.34, 1.56, 0.64, 1),
       border-color var(--t-fast) var(--ease-out) !important;
   }
 
@@ -1329,11 +1403,12 @@ nav a:focus-visible {
   }
 
   .modal-close:active {
-    transform: scale(0.97) !important;
+    transform: scale(0.93) !important;
+    transition: transform 60ms var(--ease-out) !important;
   }
 
   .ripple {
-    animation: ripple-pop 500ms var(--ease-out) !important;
+    animation: ripple-pop 560ms var(--ease-out) !important;
   }
 
   .box::after {

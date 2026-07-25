@@ -31,7 +31,7 @@ export default function useRipple() {
       if (!el) return;
 
       const rect = el.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height) * 2.2;
+      const size = Math.max(rect.width, rect.height) * 2.6;
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 

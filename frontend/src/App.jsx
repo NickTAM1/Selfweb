@@ -6,30 +6,17 @@ import Background from "./pages/Background.jsx";
 import Projects from "./pages/Projects.jsx";
 import Contact from "./pages/Contact.jsx";
 import WaveBackground from "./components/WaveBackground.jsx";
+import IconPopover from "./components/IconPopover.jsx";
+import { GithubIcon, LinkedinIcon } from "./components/icons.jsx";
 import useCardGlow from "./hooks/useCardGlow.js";
 import useRipple from "./hooks/useRipple.js";
+import useScrollDirection from "./hooks/useScrollDirection.js";
 import "./App.css";
 
-const ICON_PATHS = {
-  github:
-    "M12 2a10 10 0 0 0-3.16 19.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z",
-  linkedin:
-    "M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM2.4 9.75h5.15V21H2.4V9.75Zm7.9 0h4.93v1.54h.07c.69-1.24 2.37-2.55 4.87-2.55 5.2 0 6.16 3.28 6.16 7.54V21H21v-5.34c0-1.27-.02-2.9-1.85-2.9-1.85 0-2.14 1.36-2.14 2.81V21h-5.7V9.75Z",
-};
-
-function Icon({ name }) {
-  return (
-    <svg
-      className="btn-link-icon"
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      aria-hidden="true"
-    >
-      <path fill="currentColor" d={ICON_PATHS[name]} />
-    </svg>
-  );
-}
+const GITHUB_ACCOUNTS = [
+  { label: "NickTAM1", href: "https://github.com/NickTAM1" },
+  { label: "HUKLIA", href: "https://github.com/HUKLIA" },
+];
 
 function navLinkClass({ isActive }) {
   return isActive ? "active" : "";
@@ -89,11 +76,19 @@ export default function App() {
   // glass button across all pages -- see the hook for why it's delegated
   // instead of wired per button.
   useRipple();
+  // Hides the nav on scroll-down (past a small threshold), reveals it again
+  // on any scroll-up, and always shows it near the top of the page. Purely a
+  // window.scrollY watcher -- see the hook for why it never interacts with
+  // ProjectModal's body scroll-lock.
+  const navHidden = useScrollDirection();
 
   return (
     <HashRouter>
       <WaveBackground />
-      <nav>
+      <motion.nav
+        animate={{ y: navHidden ? "-140%" : "0%", opacity: navHidden ? 0 : 1 }}
+        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      >
         <NavLink to="/" end className={navLinkClass}>
           Home
         </NavLink>
@@ -106,34 +101,11 @@ export default function App() {
         <NavLink to="/contact" className={navLinkClass}>
           Contact
         </NavLink>
-      </nav>
+      </motion.nav>
       <AnimatedRoutes />
       <footer className="site-footer">
         <div className="footer-links">
-          <motion.a
-            className="btn-glass btn-link btn-icon"
-            href="https://github.com/NickTAM1"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub (NickTAM1)"
-            data-tooltip="GitHub (NickTAM1)"
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-          >
-            <Icon name="github" />
-          </motion.a>
-          <motion.a
-            className="btn-glass btn-link btn-icon"
-            href="https://github.com/HUKLIA"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub (HUKLIA)"
-            data-tooltip="GitHub (HUKLIA)"
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-          >
-            <Icon name="github" />
-          </motion.a>
+          <IconPopover icon={<GithubIcon />} label="GitHub" items={GITHUB_ACCOUNTS} />
           <motion.a
             className="btn-glass btn-link btn-icon"
             href="https://www.linkedin.com/in/chilek-tam-huzi"
@@ -142,9 +114,9 @@ export default function App() {
             aria-label="LinkedIn"
             data-tooltip="LinkedIn"
             whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <Icon name="linkedin" />
+            <LinkedinIcon />
           </motion.a>
         </div>
         <p>&copy; {new Date().getFullYear()} Chi Lek (Nick) Tam</p>

@@ -1,36 +1,82 @@
 import { useState } from "react";
 import { motion } from "motion/react";
+import emailjs from "@emailjs/browser";
 import Reveal from "../components/Reveal.jsx";
+import IconPopover from "../components/IconPopover.jsx";
+import { MailIcon, LinkedinIcon, GithubIcon } from "../components/icons.jsx";
 
-const ICON_PATHS = {
-  mail: "M2 5.5A1.5 1.5 0 0 1 3.5 4h17A1.5 1.5 0 0 1 22 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm2.2.5 7.3 6.15a.75.75 0 0 0 .96 0L19.8 6H4.2ZM20 7.4l-6.6 5.55a2.75 2.75 0 0 1-3.53 0L4 7.4V18h16V7.4Z",
-  linkedin:
-    "M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM2.4 9.75h5.15V21H2.4V9.75Zm7.9 0h4.93v1.54h.07c.69-1.24 2.37-2.55 4.87-2.55 5.2 0 6.16 3.28 6.16 7.54V21H21v-5.34c0-1.27-.02-2.9-1.85-2.9-1.85 0-2.14 1.36-2.14 2.81V21h-5.7V9.75Z",
-  github:
-    "M12 2a10 10 0 0 0-3.16 19.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z",
-};
+// To enable direct sending, sign up free at emailjs.com, create a service +
+// email template (with {{name}}, {{email}}, {{message}} variables), then add
+// the three keys below to a `.env` file at the frontend root (see
+// `.env.example`) or as GitHub Actions repo secrets for the deployed build.
+// Without them, the form falls back to opening the visitor's email client.
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-function Icon({ name }) {
-  return (
-    <svg
-      className="btn-link-icon"
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      aria-hidden="true"
-    >
-      <path fill="currentColor" d={ICON_PATHS[name]} />
-    </svg>
-  );
+const EMAILJS_CONFIGURED = Boolean(
+  EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY
+);
+
+const OWNER_EMAIL = "2584718806q@gmail.com";
+const GITHUB_ACCOUNTS = [
+  { label: "NickTAM1", href: "https://github.com/NickTAM1" },
+  { label: "HUKLIA", href: "https://github.com/HUKLIA" },
+];
+
+function buildMailtoUrl(name, email, message) {
+  const subject = encodeURIComponent(`Portfolio contact from ${name}`);
+  const body = encodeURIComponent(`${message} (reply to: ${email})`);
+  return `mailto:${OWNER_EMAIL}?subject=${subject}&body=${body}`;
 }
 
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState(null); // { kind: "success" | "fallback", text }
 
-  function handleSubmit(e) {
+  function openMailtoFallback(nameValue, emailValue, messageValue) {
+    window.location.href = buildMailtoUrl(nameValue, emailValue, messageValue);
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
+    if (sending) return;
+
+    if (!EMAILJS_CONFIGURED) {
+      openMailtoFallback(name, email, message);
+      setStatus({
+        kind: "fallback",
+        text: "Opened your email client. Send from there to reach me.",
+      });
+      return;
+    }
+
+    setSending(true);
+    setStatus(null);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        { name, email, message },
+        EMAILJS_PUBLIC_KEY
+      );
+      setStatus({ kind: "success", text: "Message sent, thanks!" });
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err) {
+      console.warn("Contact: EmailJS send failed, falling back to mailto", err);
+      openMailtoFallback(name, email, message);
+      setStatus({
+        kind: "fallback",
+        text: "Could not send directly, so this opened your email client instead.",
+      });
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -46,9 +92,9 @@ export default function Contact() {
             aria-label="Email"
             data-tooltip="Email"
             whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <Icon name="mail" />
+            <MailIcon />
           </motion.a>
           <motion.a
             className="btn-glass btn-link btn-icon"
@@ -58,34 +104,11 @@ export default function Contact() {
             aria-label="LinkedIn"
             data-tooltip="LinkedIn"
             whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <Icon name="linkedin" />
+            <LinkedinIcon />
           </motion.a>
-          <motion.a
-            className="btn-glass btn-link btn-icon"
-            href="https://github.com/NickTAM1"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub (NickTAM1)"
-            data-tooltip="GitHub (NickTAM1)"
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-          >
-            <Icon name="github" />
-          </motion.a>
-          <motion.a
-            className="btn-glass btn-link btn-icon"
-            href="https://github.com/HUKLIA"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub (HUKLIA)"
-            data-tooltip="GitHub (HUKLIA)"
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-          >
-            <Icon name="github" />
-          </motion.a>
+          <IconPopover icon={<GithubIcon />} label="GitHub" items={GITHUB_ACCOUNTS} />
         </div>
       </Reveal>
 
@@ -125,11 +148,20 @@ export default function Contact() {
               onChange={(e) => setMessage(e.target.value)}
             />
           </p>
-          <button className="btn-glass" type="submit">
-            Send
+          <button className="btn-glass" type="submit" disabled={sending}>
+            {sending ? "Sending..." : "Send"}
           </button>
         </form>
-        <p className="form-note">(Form is a design placeholder, not yet connected to a backend.)</p>
+        <div className="form-status" role="status" aria-live="polite">
+          {status && (
+            <p className={`form-note form-status-${status.kind}`}>{status.text}</p>
+          )}
+        </div>
+        {!EMAILJS_CONFIGURED && (
+          <p className="form-note">
+            (Direct sending isn't configured yet, so this opens your email client instead.)
+          </p>
+        )}
       </Reveal>
     </div>
   );
