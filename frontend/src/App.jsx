@@ -39,12 +39,12 @@ function AnimatedRoutes() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const initial = shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: 24 };
-  const animate = shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 };
-  const exit = shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -24 };
+  const initial = shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 1.04 };
+  const animate = shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 };
+  const exit = shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 };
   const transition = shouldReduceMotion
     ? { duration: 0 }
-    : { duration: 0.32, ease: [0.16, 1, 0.3, 1] };
+    : { duration: 0.3, ease: [0.16, 1, 0.3, 1] };
 
   return (
     <AnimatePresence mode="wait">

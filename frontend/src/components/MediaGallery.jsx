@@ -116,6 +116,7 @@ export default function MediaGallery({ items }) {
                 className="project-video"
                 src={active.src}
                 controls
+                muted
                 preload="metadata"
                 onError={() => setStageError((prev) => ({ ...prev, [active.src]: true }))}
               />

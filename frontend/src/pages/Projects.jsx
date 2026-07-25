@@ -176,38 +176,70 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
     ],
     highlights: [
       "Radix-2 Cooley-Tukey IFFT brings a per-frame heightmap from O(N⁴) down to O(N log N), making real-time generation practical",
-      "Implemented the Phillips spectrum (wave scale, wind direction, frequency domain) from research papers",
-      "Exported animated OBJ sequences (positions, normals, faces) for Blender",
+      "Chose the Phillips spectrum over JONSWAP for its longer track record of published verification on a solo, time-boxed project",
+      "Exported animated OBJ sequences (positions, normals, faces) that composite into an animation in Blender, no plugins required",
     ],
     detail: (
       <details className="deep-dive">
         <summary>Engineering deep-dive</summary>
         <div className="deep-dive-body">
           <p>
-            <strong>Complexity:</strong> direct spatial wave summation is
-            O(N^4) and unusable in real time. Replacing it with a Radix 2
-            Cooley Tukey IFFT over a bit reversed butterfly diagram brings it
-            down to O(N log N), which is what makes generating a full
-            heightmap per frame practical at all.
+            <strong>Problem:</strong> wave generation is a key feature in
+            games and film, but true fluid-dynamics simulation is too
+            computationally expensive to run in real time on ordinary
+            hardware. The goal was a realistic, animatable ocean surface
+            without a full fluid solver, and without requiring the end user
+            to own high-spec equipment.
+          </p>
+
+          <p className="deep-dive-subhead">
+            <strong>Key decisions</strong>
           </p>
           <ul>
             <li>
-              Understanding the Phillips spectrum formula (wave scale, wind
-              direction, frequency domain) took reading through research
-              papers and conference talks.
+              <strong>Phillips spectrum over JONSWAP.</strong> JONSWAP is
+              built from real North Sea wave observation data and is the
+              more modern choice in recent research, but Phillips spectrum
+              has been in use since 2003 and has a longer track record of
+              published verification, which mattered more for a solo,
+              time-boxed project than using the newest method.
             </li>
             <li>
-              Implemented in C++ with almost no prior C++ experience.
-              std::complex helped with the complex number math, and getting
-              the FFT butterfly diagram (bit reversal especially) right was
-              the hardest part.
+              <strong>FFT/IFFT over direct spatial summation.</strong>{" "}
+              Direct summation of the wave field is O(N⁴) and unusable in
+              real time. A Radix-2 Cooley-Tukey IFFT over a bit-reversed
+              butterfly diagram brings that down to O(N log N), which is
+              what makes generating a full heightmap per frame practical at
+              all.
             </li>
             <li>
-              Exported results as OBJ files (vertex positions, normals,
-              faces) and combined them into an animation sequence in
-              Blender.
+              <strong>Offline OBJ export over a live in-engine solver.</strong>{" "}
+              Building a real-time GPU solver was outside the scope and
+              hardware constraints of a solo project, so the tool exports
+              animated OBJ mesh sequences that get composited into an
+              animation in Blender afterward. That traded real-time
+              interactivity for something that reliably works on ordinary
+              hardware and any standard 3D package, no plugins required.
             </li>
           </ul>
+
+          <p>
+            <strong>Result:</strong> the generator successfully produces 3D
+            animated ocean wave meshes that import cleanly into standard 3D
+            software with no plugins, on ordinary hardware. It reports real
+            per-frame output at runtime, confirmed empirically rather than
+            just visually, e.g. a console run reported "Max Displacement =
+            0.94244" at t = 0.
+          </p>
+          <p>
+            <strong>Honest limitation / what&apos;s next:</strong> given
+            more time, the next steps would be moving to the JONSWAP
+            spectrum for more accurate real-world grounding, porting the
+            generation to GPU compute for real-time speed (it currently runs
+            offline / pre-baked, not live), and generating the animation
+            directly instead of manually compositing OBJ sequences in
+            Blender afterward.
+          </p>
 
           <details className="code-viewer panel">
             <summary>View Phillips spectrum formula (illustrative, reconstructed)</summary>
@@ -221,6 +253,17 @@ double PhillipsSpectrum(FVector2 k, FVector2 windDir, double windSpeed, double A
     double base = std::exp(-1.0 / (kLen * kLen * L * L)) / std::pow(kLen, 4);
     return A * base * kDotW * kDotW;
 }`}</pre>
+          </details>
+
+          <details className="code-viewer panel">
+            <summary>View IFFT butterfly step (illustrative, reconstructed)</summary>
+            <pre>{`// IFFT butterfly step (illustrative, reconstructed)
+// A0 = (B0 + B1) * 0.5      -- FFT butterfly combine
+// A1 = (B0 - B1) * 0.5
+// B0 = (A0 + A1)            -- IFFT butterfly combine
+// B1 = (A0 - A1)
+double Trager0 = (inputR1 + X * inputR2 + Y * inputI2) * 0.5;
+double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
           </details>
         </div>
       </details>

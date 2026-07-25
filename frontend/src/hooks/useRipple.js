@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const RIPPLE_SELECTOR = ".btn-glass, .filter-tab, .view-details-btn, .modal-close, .btn-link";
+const RIPPLE_SELECTOR = ".btn-glass, .filter-tab, .view-details-btn, .modal-close, .btn-link, nav a";
 
 /**
  * Delegated "bubble" ripple for every glass button on the site. Attaches a
