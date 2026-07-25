@@ -586,6 +586,28 @@ nav a:focus-visible {
   display: block;
 }
 
+/* Cursor-tracking edge-light "spotlight" glow, mirroring .box::after (see
+   above). Position is written by useCardGlow.js as plain --mx/--my DOM style
+   properties; visibility is handled entirely by :hover below. */
+.stat-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    220px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(52, 211, 153, 0.14),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease-out);
+  pointer-events: none;
+}
+
+.stat-tile:hover::after {
+  opacity: 1;
+}
+
 @media (max-width: 640px) {
   .stat-strip {
     grid-template-columns: repeat(2, 1fr);
@@ -1486,6 +1508,14 @@ nav a:focus-visible {
   }
 
   .box:hover::after {
+    opacity: 1 !important;
+  }
+
+  .stat-tile::after {
+    transition: opacity var(--t-fast) var(--ease-out) !important;
+  }
+
+  .stat-tile:hover::after {
     opacity: 1 !important;
   }
 

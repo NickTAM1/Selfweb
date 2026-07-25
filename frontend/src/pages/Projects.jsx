@@ -385,38 +385,50 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
     categoryLabel: "PHP // FULL-STACK WEB",
     title: "Shopping Mall",
     summary:
-      "A web-based shopping mall application built with Laravel: user auth, an admin-managed product catalog with image uploads, and a shopping cart. One of my earlier full-stack projects.",
+      "\"Mobile Shop\": an online shopping platform for smartphones across four brands (Samsung, Sony, Huawei, Xiaomi), built with two teammates for a university systems course. User auth, a brand-filtered product catalog with image uploads, a shopping cart, and purchase order tracking.",
     badges: ["PHP", "Laravel", "MySQL", "Vue 2", "Bootstrap"],
     media: [
-      { type: "image", src: "/Selfweb/media/shoppingmall-1.jpg", label: "Storefront" },
-      { type: "image", src: "/Selfweb/media/shoppingmall-2.jpg", label: "Product" },
-      { type: "image", src: "/Selfweb/media/shoppingmall-3.jpg", label: "Cart" },
-      { type: "image", src: "/Selfweb/media/shoppingmall-4.jpg", label: "Admin" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-1.jpg", label: "Storefront (guest view)" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-2.jpg", label: "Storefront (logged in)" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-3.jpg", label: "Product Detail" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-4.jpg", label: "Purchase Orders" },
     ],
     highlights: [
-      "Full auth flow -- registration, login, password reset, email verification via laravel/ui",
-      "Admin-managed product catalog with image uploads",
-      "Shopping cart with dedicated cart/cart-item models",
+      "21 defined requirements across catalog, accounts, cart, and order tracking, built and demoed as a 3-person team",
+      "Brand-filtered product catalog (Samsung, Sony, Huawei, Xiaomi) with an admin-managed image upload flow",
+      "Shopping cart and purchase order tracking with order status (Pending/Hold) visible to the customer",
     ],
     detail: (
       <details className="deep-dive">
         <summary>Engineering deep-dive</summary>
         <div className="deep-dive-body">
           <p>
-            An early full-stack project exploring Laravel&apos;s MVC
-            conventions: Auth, Cart, Product, and Home controllers; Product,
-            Cart, CartItem, File, and User models; Blade templates for the
-            storefront, cart, and admin views; and frontend assets (JS/CSS/
-            Sass) compiled through Laravel Mix with a Vue 2-driven frontend.
+            &quot;Mobile Shop&quot; was a 3-person team project for COMP321
+            (Information System Implementation), a university course on
+            information system design and delivery. Working with two
+            teammates, I helped build an online shopping platform for
+            smartphones across four brands, Samsung, Sony, Huawei, and
+            Xiaomi, covering 21 defined requirements across six areas:
+            product listing, customer accounts, the shopping cart, purchase
+            order tracking, catalog maintenance, and order processing, the
+            features you can see across the screenshots below (brand
+            filtering on the storefront, a logged-in customer view with
+            pricing, a product detail page with an Add to Cart flow, and
+            purchase order history with Pending/Hold status tracking).
           </p>
           <p>
-            <strong>Stack:</strong> PHP 7.3+/8.0, Laravel 8, MySQL (or any
-            database Laravel&apos;s query builder supports), Laravel Mix,
-            Sass, Bootstrap 4, Vue 2.
+            The version submitted for the course ran on WampServer locally
+            with PHP, MySQL, and phpMyAdmin for schema/data management. The
+            codebase itself is a Laravel 8 app: Auth, Cart, Product, and Home
+            controllers; Product, Cart, CartItem, File, and User models;
+            Blade templates for the storefront, cart, and admin views; and
+            frontend assets (JS/CSS/Sass) compiled through Laravel Mix with a
+            Vue 2-driven frontend.
           </p>
           <p>
-            One of my earlier full-stack projects, exploring Laravel&apos;s
-            MVC conventions, auth scaffolding, and a Vue-driven frontend.
+            <strong>Stack:</strong> PHP 7.3+/8.0, Laravel 8, MySQL,
+            phpMyAdmin, WampServer (local dev), Laravel Mix, Sass, Bootstrap
+            4, Vue 2.
           </p>
 
           <details className="code-viewer panel">

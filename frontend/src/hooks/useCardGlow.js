@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const CARD_SELECTOR = ".box, .project-card-compact";
+const CARD_SELECTOR = ".box, .project-card-compact, .stat-tile";
 
 /**
  * Cursor-following "spotlight" highlight for glass cards (see the .box::after
