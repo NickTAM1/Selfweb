@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Reveal from "../components/Reveal.jsx";
 import StatStrip from "../components/StatStrip.jsx";
 import Marquee from "../components/Marquee.jsx";
+import { PROJECTS } from "./Projects.jsx";
 
 const LOOKING_FOR = [
   "Backend Development",
@@ -39,7 +40,7 @@ const SKILL_GROUPS = [
 
 const STATS = [
   { value: "4", label: "LANGUAGES SPOKEN" },
-  { value: "3", label: "SHIPPED PROJECTS" },
+  { value: String(PROJECTS.length), label: "SHIPPED PROJECTS" },
   { value: "N1", label: "JLPT (JAPANESE)" },
   { value: "BSc", label: "COMPUTING" },
 ];

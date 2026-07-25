@@ -45,6 +45,7 @@ function StatTile({ value, label, index }) {
 
     let rafId;
     const runCountUp = () => {
+      setDisplay(0);
       const start = performance.now();
       const tick = (now) => {
         const progress = Math.min((now - start) / COUNT_MS, 1);
@@ -59,12 +60,18 @@ function StatTile({ value, label, index }) {
       rafId = requestAnimationFrame(tick);
     };
 
+    // Bidirectional, mirroring Reveal's `once: false` pop-in: replay the
+    // count-up from 0 every time the tile re-enters the viewport, and reset
+    // back to 0 when it leaves so it's ready to animate again next entry
+    // (consistent with the surrounding boxes, which also pop back out).
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (rafId) cancelAnimationFrame(rafId);
           if (entry.isIntersecting) {
             runCountUp();
-            observer.unobserve(entry.target);
+          } else {
+            setDisplay(0);
           }
         });
       },
@@ -101,7 +108,7 @@ function StatTile({ value, label, index }) {
       ref={ref}
       initial={{ opacity: 0, scale: 0.9, y: 22 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: false, amount: 0.15 }}
       transition={{ type: "spring", stiffness: 260, damping: 22, delay }}
     >
       <span className="stat-value">{display}</span>

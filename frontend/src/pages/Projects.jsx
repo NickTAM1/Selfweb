@@ -2,9 +2,14 @@ import { useRef, useState } from "react";
 import Reveal from "../components/Reveal.jsx";
 import ProjectModal from "../components/ProjectModal.jsx";
 
-const FILTERS = ["All", "UE5", "Unity", "Graphics", "Tools"];
+const FILTERS = ["All", "UE5", "Unity", "Graphics", "Tools", "Web"];
 
-const PROJECTS = [
+// Exported so Home.jsx can derive the "SHIPPED PROJECTS" stat from
+// PROJECTS.length instead of a hardcoded number that goes stale. This is a
+// plain data array, not a component, so it's exempt from the fast-refresh
+// component-only-exports rule.
+// eslint-disable-next-line react-refresh/only-export-components
+export const PROJECTS = [
   {
     id: "mobius-fish",
     category: "UE5",
@@ -278,10 +283,27 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       "A Windows desktop app that consolidates UE5 packaging, VS project regeneration, Git management, and build diagnostics into a single GUI, with a local-LLM chat assistant built in.",
     badges: ["Rust", "egui", "Unreal Engine 5", "Git Automation", "Local LLM"],
     media: [
-      { type: "image", src: "/Selfweb/media/unrealdevtool-1.jpg", label: "Dashboard tab" },
-      { type: "image", src: "/Selfweb/media/unrealdevtool-2.jpg", label: "Package tab" },
-      { type: "image", src: "/Selfweb/media/unrealdevtool-3.jpg", label: "Git tab" },
-      { type: "image", src: "/Selfweb/media/unrealdevtool-4.jpg", label: "Chat / AI assistant tab" },
+      { type: "video", src: "/Selfweb/media/unrealdevtool-demo.mp4", label: "Unreal DevTool — live demo" },
+      {
+        type: "image",
+        src: "/Selfweb/media/unrealdevtool-1.jpg",
+        label: "Dashboard — project/engine detection, preflight diagnostics",
+      },
+      {
+        type: "image",
+        src: "/Selfweb/media/unrealdevtool-2.jpg",
+        label: "Package — build versioning, NTFS-junction space-path fix",
+      },
+      {
+        type: "image",
+        src: "/Selfweb/media/unrealdevtool-3.jpg",
+        label: "Git — commit/push/sync, commit activity",
+      },
+      {
+        type: "image",
+        src: "/Selfweb/media/unrealdevtool-4.jpg",
+        label: "Chat — local LLM dev assistant (LM Studio/Ollama)",
+      },
     ],
     highlights: [
       "Automated fix for a real UE5 UAT/UBT bug -- spaces in file paths -- via NTFS directory junctions",
@@ -357,6 +379,49 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       </details>
     ),
   },
+  {
+    id: "shopping-mall",
+    category: "Web",
+    categoryLabel: "PHP // FULL-STACK WEB",
+    title: "Shopping Mall",
+    summary:
+      "A web-based shopping mall application built with Laravel: user auth, an admin-managed product catalog with image uploads, and a shopping cart. One of my earlier full-stack projects.",
+    badges: ["PHP", "Laravel", "MySQL", "Vue 2", "Bootstrap"],
+    media: [
+      { type: "image", src: "/Selfweb/media/shoppingmall-1.jpg", label: "Storefront / product catalog" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-2.jpg", label: "Product detail page" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-3.jpg", label: "Shopping cart" },
+      { type: "image", src: "/Selfweb/media/shoppingmall-4.jpg", label: "Admin product management" },
+    ],
+    highlights: [
+      "Full auth flow -- registration, login, password reset, email verification via laravel/ui",
+      "Admin-managed product catalog with image uploads",
+      "Shopping cart with dedicated cart/cart-item models",
+    ],
+    detail: (
+      <details className="deep-dive">
+        <summary>Engineering deep-dive</summary>
+        <div className="deep-dive-body">
+          <p>
+            An early full-stack project exploring Laravel&apos;s MVC
+            conventions: Auth, Cart, Product, and Home controllers; Product,
+            Cart, CartItem, File, and User models; Blade templates for the
+            storefront, cart, and admin views; and frontend assets (JS/CSS/
+            Sass) compiled through Laravel Mix with a Vue 2-driven frontend.
+          </p>
+          <p>
+            <strong>Stack:</strong> PHP 7.3+/8.0, Laravel 8, MySQL (or any
+            database Laravel&apos;s query builder supports), Laravel Mix,
+            Sass, Bootstrap 4, Vue 2.
+          </p>
+          <p>
+            One of my earlier full-stack projects, exploring Laravel&apos;s
+            MVC conventions, auth scaffolding, and a Vue-driven frontend.
+          </p>
+        </div>
+      </details>
+    ),
+  },
 ];
 
 export default function Projects() {
@@ -381,9 +446,9 @@ export default function Projects() {
     <div className="container">
       <h1>Projects</h1>
       <p>
-        Möbius Fish has a real gameplay capture; Radswing, the FFT generator,
-        and Unreal DevTool are placeholders until clips are added. Tap a
-        project for the full engineering breakdown.
+        Möbius Fish, the FFT generator, and Unreal DevTool have real capture
+        footage; Radswing and Shopping Mall are placeholders until clips are
+        added. Tap a project for the full engineering breakdown.
       </p>
 
       <Reveal

@@ -1,22 +1,18 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import emailjs from "@emailjs/browser";
 import Reveal from "../components/Reveal.jsx";
 import IconPopover from "../components/IconPopover.jsx";
 import { MailIcon, LinkedinIcon, GithubIcon } from "../components/icons.jsx";
 
-// To enable direct sending, sign up free at emailjs.com, create a service +
-// email template (with {{name}}, {{email}}, {{message}} variables), then add
-// the three keys below to a `.env` file at the frontend root (see
-// `.env.example`) or as GitHub Actions repo secrets for the deployed build.
-// Without them, the form falls back to opening the visitor's email client.
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+// To enable direct sending, go to web3forms.com, enter your email, and
+// you'll receive a free access key by email (no account/password, no
+// template dashboard needed) -- add it to a `.env` file at the frontend
+// root (see `.env.example`) or as a GitHub Actions repo secret named
+// `VITE_WEB3FORMS_ACCESS_KEY` for the deployed build. Without it, the form
+// falls back to opening the visitor's email client.
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
 
-const EMAILJS_CONFIGURED = Boolean(
-  EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY
-);
+const WEB3FORMS_CONFIGURED = Boolean(WEB3FORMS_ACCESS_KEY);
 
 const OWNER_EMAIL = "2584718806q@gmail.com";
 const GITHUB_ACCOUNTS = [
@@ -45,7 +41,7 @@ export default function Contact() {
     e.preventDefault();
     if (sending) return;
 
-    if (!EMAILJS_CONFIGURED) {
+    if (!WEB3FORMS_CONFIGURED) {
       openMailtoFallback(name, email, message);
       setStatus({
         kind: "fallback",
@@ -57,18 +53,30 @@ export default function Contact() {
     setSending(true);
     setStatus(null);
     try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        { name, email, message },
-        EMAILJS_PUBLIC_KEY
-      );
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          name,
+          email,
+          message,
+          subject: `Portfolio contact from ${name}`,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result?.message || "Web3Forms submission failed");
+      }
       setStatus({ kind: "success", text: "Message sent, thanks!" });
       setName("");
       setEmail("");
       setMessage("");
     } catch (err) {
-      console.warn("Contact: EmailJS send failed, falling back to mailto", err);
+      console.warn("Contact: Web3Forms send failed, falling back to mailto", err);
       openMailtoFallback(name, email, message);
       setStatus({
         kind: "fallback",
@@ -157,7 +165,7 @@ export default function Contact() {
             <p className={`form-note form-status-${status.kind}`}>{status.text}</p>
           )}
         </div>
-        {!EMAILJS_CONFIGURED && (
+        {!WEB3FORMS_CONFIGURED && (
           <p className="form-note">
             (Direct sending isn't configured yet, so this opens your email client instead.)
           </p>
