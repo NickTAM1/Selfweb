@@ -73,9 +73,32 @@ function displayNumber(value) {
   return typeof value === "number" ? value.toLocaleString() : "—";
 }
 
+function getMonthLabels(weeks) {
+  const labels = [];
+  let previousMonth = "";
+
+  weeks.forEach((week, weekIndex) => {
+    const referenceDay = week.find((day) => day.in_range) || week[0];
+    const monthKey = referenceDay?.date?.slice(0, 7);
+    if (!monthKey || monthKey === previousMonth) return;
+
+    labels.push({
+      key: monthKey,
+      index: weekIndex,
+      label: new Intl.DateTimeFormat("en-US", { month: "short" }).format(
+        new Date(`${monthKey}-01T00:00:00Z`),
+      ),
+    });
+    previousMonth = monthKey;
+  });
+
+  return labels;
+}
+
 function ContributionHeatmap({ state }) {
   const data = state.data;
   const hasCalendar = Boolean(data?.weeks?.length);
+  const monthLabels = hasCalendar ? getMonthLabels(data.weeks) : [];
   const statusLabel = data
     ? data.source === "contribution-calendar"
       ? "CONTRIBUTION CALENDAR"
@@ -92,24 +115,37 @@ function ContributionHeatmap({ state }) {
           <h3>Contribution pulse</h3>
         </div>
         <span className="contribution-total">
-          {data ? `${displayNumber(data.total)} TOTAL` : statusLabel}
+          {data ? `${displayNumber(data.total)} contributions in the last year` : statusLabel}
         </span>
       </div>
       {hasCalendar ? (
         <>
-          <div className="contribution-grid" aria-label="Combined GitHub contribution calendar">
-            {data.weeks.map((week, weekIndex) => (
-              <div className="contribution-week" key={`week-${weekIndex}`}>
-                {week.map((day) => (
-                  <span
-                    className={`contribution-cell contribution-level-${day.level}${day.in_range ? "" : " is-outside"}`}
-                    key={day.date}
-                    title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
-                    aria-label={`${day.count} contributions on ${day.date}`}
-                  />
-                ))}
-              </div>
-            ))}
+          <div className="contribution-calendar">
+            <div className="contribution-months" aria-hidden="true">
+              {monthLabels.map((month) => (
+                <span
+                  className="contribution-month-label"
+                  key={month.key}
+                  style={{ gridColumn: month.index + 1 }}
+                >
+                  {month.label}
+                </span>
+              ))}
+            </div>
+            <div className="contribution-grid" aria-label="Combined GitHub contribution calendar">
+              {data.weeks.map((week, weekIndex) => (
+                <div className="contribution-week" key={`week-${weekIndex}`}>
+                  {week.map((day) => (
+                    <span
+                      className={`contribution-cell contribution-level-${day.level}${day.in_range ? "" : " is-outside"}`}
+                      key={day.date}
+                      title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
+                      aria-label={`${day.count} contributions on ${day.date}`}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="contribution-footer">
             <span className="mono-label">{data.label}</span>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Reveal from "../components/Reveal.jsx";
 import StatStrip from "../components/StatStrip.jsx";
@@ -38,6 +39,13 @@ const SKILL_GROUPS = [
   },
 ];
 
+const SKILL_FILTERS = [
+  { label: "All", value: "All" },
+  { label: "Languages", value: "Languages" },
+  { label: "Engines", value: "Engines & App Dev" },
+  { label: "Tools", value: "Tools & Systems" },
+];
+
 const STATS = [
   { value: "4", label: "LANGUAGES SPOKEN" },
   { value: String(PROJECTS.length), label: "SHIPPED PROJECTS" },
@@ -62,6 +70,21 @@ const LANGUAGES = [
 
 export default function Home() {
   const skillCount = SKILL_GROUPS.reduce((total, group) => total + group.skills.length, 0);
+  const [activeSkillGroup, setActiveSkillGroup] = useState("All");
+  const [skillQuery, setSkillQuery] = useState("");
+  const normalizedSkillQuery = skillQuery.trim().toLowerCase();
+  const visibleSkillGroups = SKILL_GROUPS.map((group) => ({
+    ...group,
+    skills: group.skills.filter((skill) =>
+      !normalizedSkillQuery || skill.toLowerCase().includes(normalizedSkillQuery),
+    ),
+  }))
+    .filter((group) => activeSkillGroup === "All" || group.title === activeSkillGroup)
+    .filter((group) => group.skills.length > 0);
+  const visibleSkillCount = visibleSkillGroups.reduce(
+    (total, group) => total + group.skills.length,
+    0,
+  );
 
   return (
     <div className="container home-container">
@@ -136,8 +159,49 @@ export default function Home() {
         <p className="section-intro">
           A practical stack across product surfaces, game systems, and the tools that connect them.
         </p>
-        <div className="skills-dashboard">
-          {SKILL_GROUPS.map((group, groupIndex) => (
+        <div className="skill-explorer-controls">
+          <div className="skill-filter-tabs" role="group" aria-label="Filter skills by area">
+            {SKILL_FILTERS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={`skill-filter-tab${activeSkillGroup === option.value ? " active" : ""}`}
+                aria-pressed={activeSkillGroup === option.value}
+                onClick={() => setActiveSkillGroup(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <div className="skill-search-wrap">
+            <label className="sr-only" htmlFor="skill-search">
+              Search skills
+            </label>
+            <input
+              id="skill-search"
+              type="search"
+              placeholder="Find a skill..."
+              value={skillQuery}
+              onChange={(event) => setSkillQuery(event.target.value)}
+            />
+            {skillQuery ? (
+              <button
+                type="button"
+                className="skill-search-clear"
+                aria-label="Clear skill search"
+                onClick={() => setSkillQuery("")}
+              >
+                &times;
+              </button>
+            ) : null}
+          </div>
+        </div>
+        <p className="skill-filter-status" aria-live="polite">
+          Showing {visibleSkillCount} of {skillCount} core skills
+        </p>
+        {visibleSkillGroups.length > 0 ? (
+          <div className="skills-dashboard">
+          {visibleSkillGroups.map((group, groupIndex) => (
             <div className="skill-cluster" key={group.title}>
               <div className="skill-cluster-heading">
                 <span className="skill-cluster-index">0{groupIndex + 1}</span>
@@ -155,7 +219,12 @@ export default function Home() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        ) : (
+          <div className="skill-empty" role="status">
+            No skills match “{skillQuery}”. Try a different search or reset the area filter.
+          </div>
+        )}
         <div className="skills-footer-line">
           <span className="mono-label accent">STACK_SIGNAL</span>
           <span className="skills-footer-rule" aria-hidden="true" />

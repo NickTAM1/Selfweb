@@ -467,10 +467,23 @@ public function add() {
 
 export default function Projects() {
   const [filter, setFilter] = useState("All");
+  const [query, setQuery] = useState("");
   const [activeId, setActiveId] = useState(null);
   const triggerRefs = useRef({});
 
-  const visibleProjects = PROJECTS.filter((p) => filter === "All" || p.category === filter);
+  const normalizedQuery = query.trim().toLowerCase();
+  const visibleProjects = PROJECTS.filter((project) => {
+    const matchesFilter = filter === "All" || project.category === filter;
+    const searchableText = [
+      project.title,
+      project.summary,
+      project.categoryLabel,
+      ...project.badges,
+    ]
+      .join(" ")
+      .toLowerCase();
+    return matchesFilter && (!normalizedQuery || searchableText.includes(normalizedQuery));
+  });
   const activeProject = PROJECTS.find((p) => p.id === activeId) || null;
 
   function openProject(id) {
@@ -514,6 +527,34 @@ export default function Projects() {
           </button>
         ))}
       </Reveal>
+
+      <div className="project-discovery-controls">
+        <div className="project-search-wrap">
+          <label className="sr-only" htmlFor="project-search">
+            Search projects
+          </label>
+          <input
+            id="project-search"
+            type="search"
+            placeholder="Search systems, tools, stacks..."
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          {query ? (
+            <button
+              type="button"
+              className="project-search-clear"
+              aria-label="Clear project search"
+              onClick={() => setQuery("")}
+            >
+              &times;
+            </button>
+          ) : null}
+        </div>
+        <p className="project-result-summary" aria-live="polite">
+          {visibleProjects.length} of {PROJECTS.length} case studies visible
+        </p>
+      </div>
 
       <div className="project-grid">
         {visibleProjects.map((project, i) => (
@@ -561,6 +602,24 @@ export default function Projects() {
           </Reveal>
         ))}
       </div>
+
+      {visibleProjects.length === 0 ? (
+        <div className="project-empty-state" role="status">
+          <span className="mono-label accent">NO_MATCH_FOUND</span>
+          <h2>Nothing fits that query yet.</h2>
+          <p>Try a project title, technology, or a broader category.</p>
+          <button
+            type="button"
+            className="btn-glass"
+            onClick={() => {
+              setQuery("");
+              setFilter("All");
+            }}
+          >
+            Reset discovery
+          </button>
+        </div>
+      ) : null}
 
       <Reveal className="box beyond-games" index={visibleProjects.length}>
         <div className="section-heading-row">
