@@ -20,10 +20,11 @@ export const PROJECTS = [
     badges: ["Unreal Engine 5", "C++", "State Tree", "Physics Simulation", "Firebase"],
     media: [
       { type: "video", src: "/Selfweb/media/mobius-gameplay.mp4", label: "UE5 Gameplay Capture" },
-      { type: "image", src: "/Selfweb/media/mobius-1.jpg", label: "Möbius Fish Screenshot 1" },
-      { type: "image", src: "/Selfweb/media/mobius-2.jpg", label: "Möbius Fish Screenshot 2" },
-      { type: "image", src: "/Selfweb/media/mobius-3.jpg", label: "Möbius Fish Screenshot 3" },
-      { type: "image", src: "/Selfweb/media/mobius-4.jpg", label: "Möbius Fish Screenshot 4" },
+      { type: "image", src: "/Selfweb/media/mobius-menu.png", label: "Main Menu" },
+      { type: "image", src: "/Selfweb/media/mobius-level-1.jpg", label: "Level 1 Gameplay" },
+      { type: "image", src: "/Selfweb/media/mobius-level-3.jpg", label: "Level 3 Combat" },
+      { type: "image", src: "/Selfweb/media/mobius-level-4.jpg", label: "Level 4 Combat" },
+      { type: "image", src: "/Selfweb/media/mobius-boat-closeup.jpg", label: "Boat Buoyancy Close-up" },
     ],
     highlights: [
       "C++ StateTree AI with a direct-velocity + NavMesh hybrid movement model",
