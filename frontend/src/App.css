@@ -614,6 +614,162 @@ nav a:focus-visible {
   }
 }
 
+/* ---------- GitHub activity signal ---------- */
+
+.github-activity {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.16), transparent 38%),
+    var(--glass-bg);
+}
+
+.section-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.section-heading-row h2 {
+  margin-top: 5px;
+}
+
+.signal-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  padding: 6px 10px;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  color: var(--emerald-light);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.signal-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald-light);
+  box-shadow: 0 0 10px var(--emerald-glow);
+}
+
+.signal-state.is-loading .signal-dot {
+  animation: signal-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes signal-pulse {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.7);
+  }
+}
+
+.github-intro {
+  max-width: 560px;
+  color: var(--text-dim);
+  font-size: 15px;
+}
+
+.github-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.github-metric {
+  padding: 14px 15px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.github-metric .stat-value {
+  font-size: 25px;
+  margin-bottom: 3px;
+}
+
+.github-metric .mono-label {
+  font-size: 10px;
+}
+
+.github-accounts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.github-account {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text-h);
+  text-decoration: none;
+  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+}
+
+.github-account:hover {
+  border-color: var(--accent-border);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.github-avatar {
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--accent-border);
+}
+
+.github-avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--emerald-glow);
+  color: var(--emerald-light);
+  font-weight: 800;
+}
+
+.github-account-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.github-account-copy strong,
+.github-account-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.github-account-copy strong {
+  font-size: 14px;
+}
+
+.github-account-copy span {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.github-arrow {
+  margin-left: auto;
+  color: var(--emerald-light);
+  font-size: 18px;
+}
+
 /* ---------- Tech marquee (Home) ---------- */
 
 .marquee-section {
@@ -643,9 +799,17 @@ nav a:focus-visible {
   display: flex;
   align-items: center;
   width: max-content;
-  gap: 10px;
   padding: 2px 0;
+  will-change: transform;
   animation: marquee-left 34s linear infinite;
+}
+
+.marquee-group {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding-right: 10px;
 }
 
 .marquee-row.reverse .marquee-track {
@@ -664,19 +828,19 @@ nav a:focus-visible {
 
 @keyframes marquee-left {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 @keyframes marquee-right {
   from {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
   to {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -691,6 +855,12 @@ nav a:focus-visible {
     width: auto;
     flex-wrap: wrap;
   }
+
+  .marquee-group {
+    flex-wrap: wrap;
+    padding-right: 0;
+  }
+
   .marquee-dup {
     display: none;
   }
@@ -1595,6 +1765,17 @@ nav a:focus-visible {
 @media (max-width: 640px) {
   .box {
     padding: 20px 18px;
+  }
+
+  .github-metrics,
+  .github-accounts {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .hero-cta {

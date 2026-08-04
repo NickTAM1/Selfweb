@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Reveal from "../components/Reveal.jsx";
 import StatStrip from "../components/StatStrip.jsx";
 import Marquee from "../components/Marquee.jsx";
+import GitHubActivity from "../components/GitHubActivity.jsx";
 import { PROJECTS } from "./Projects.jsx";
 
 const LOOKING_FOR = [
@@ -101,6 +102,8 @@ export default function Home() {
       </div>
 
       <StatStrip stats={STATS} />
+
+      <GitHubActivity />
 
       <Reveal className="box" index={1}>
         <h2>About</h2>

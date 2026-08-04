@@ -16,6 +16,8 @@ A four-page portfolio (Home, Background, Projects, Contact) showcasing five real
 
 ## Tech stack
 
+The frontend remains a React/Vite static site. An optional Flask service now provides cached live GitHub stats for the two linked public profiles.
+
 React 19 · Vite 8 · React Router · Motion — deployed as a static site to GitHub Pages via GitHub Actions on every push to `main`.
 
 ## Running it locally
@@ -39,6 +41,23 @@ npm run lint      # run ESLint
 ```
 
 ## Configuration (optional)
+
+The home page links the `NickTAM1` and `HUKLIA` GitHub profiles. Without extra configuration it reads public profile counts directly from GitHub. For combined repo-star counts and server-side caching, run the Flask service and set `VITE_API_BASE_URL` before building:
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate       # Windows
+pip install -r requirements.txt
+python app.py
+
+# in another terminal
+cd frontend
+copy .env.example .env       # keep VITE_API_BASE_URL=http://127.0.0.1:5000
+npm run dev
+```
+
+For production, deploy the backend separately, set `CORS_ORIGIN` to the frontend origin, and provide `GITHUB_TOKEN` as a server secret if you need higher GitHub API limits. The static site remains functional if the API is unavailable.
 
 The contact form sends directly via Web3Forms if configured, otherwise it opens the visitor's email client. To enable direct sending, copy `frontend/.env.example` to `frontend/.env` and add a free access key from [web3forms.com](https://web3forms.com) (or set `VITE_WEB3FORMS_ACCESS_KEY` as a GitHub Actions repo secret for the deployed build).
 

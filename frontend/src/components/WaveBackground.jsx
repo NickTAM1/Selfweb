@@ -149,19 +149,38 @@ export default function WaveBackground() {
 
     if (!gl) return undefined;
 
-    const program = createProgram(gl, VERTEX_SRC, FRAGMENT_SRC);
-    if (!program) return undefined;
+    // WebGL resources are invalidated when the browser suspends or resets the
+    // graphics context. Keep their handles mutable so the background can
+    // rebuild itself instead of staying permanently frozen after restore.
+    let program = null;
+    let positionBuffer = null;
+    let positionLoc = -1;
+    let resolutionLoc = null;
+    let timeLoc = null;
+    let mouseLoc = null;
 
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    // A single triangle that overshoots the viewport on every side -- cheaper
-    // than a quad (no second triangle, no index buffer) and avoids the seam.
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    function setupGlResources() {
+      program = createProgram(gl, VERTEX_SRC, FRAGMENT_SRC);
+      if (!program) return false;
 
-    const positionLoc = gl.getAttribLocation(program, "a_position");
-    const resolutionLoc = gl.getUniformLocation(program, "u_resolution");
-    const timeLoc = gl.getUniformLocation(program, "u_time");
-    const mouseLoc = gl.getUniformLocation(program, "u_mouse");
+      positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      // A single triangle that overshoots the viewport on every side --
+      // cheaper than a quad and avoids the diagonal seam.
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array([-1, -1, 3, -1, -1, 3]),
+        gl.STATIC_DRAW
+      );
+
+      positionLoc = gl.getAttribLocation(program, "a_position");
+      resolutionLoc = gl.getUniformLocation(program, "u_resolution");
+      timeLoc = gl.getUniformLocation(program, "u_time");
+      mouseLoc = gl.getUniformLocation(program, "u_mouse");
+      return true;
+    }
+
+    if (!setupGlResources()) return undefined;
 
     let rafId = null;
     let disposed = false;
@@ -198,6 +217,7 @@ export default function WaveBackground() {
     }
 
     function drawFrame(time) {
+      if (!program || !positionBuffer) return;
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
       gl.enableVertexAttribArray(positionLoc);
@@ -255,9 +275,13 @@ export default function WaveBackground() {
     }
 
     function handleContextRestored() {
-      // Resources (buffers/program) were invalidated with the old context.
-      // Re-creating them safely needs a fresh mount; leaving the canvas
-      // blank here is the graceful, crash-free option.
+      if (disposed || !setupGlResources()) return;
+      resize();
+      if (reduceMotion) {
+        drawFrame(0);
+      } else if (rafId === null) {
+        rafId = requestAnimationFrame(renderLoop);
+      }
     }
 
     document.addEventListener("visibilitychange", handleVisibility);
@@ -274,8 +298,8 @@ export default function WaveBackground() {
       canvas.removeEventListener("webglcontextlost", handleContextLost);
       canvas.removeEventListener("webglcontextrestored", handleContextRestored);
 
-      gl.deleteBuffer(positionBuffer);
-      gl.deleteProgram(program);
+      if (positionBuffer) gl.deleteBuffer(positionBuffer);
+      if (program) gl.deleteProgram(program);
       const loseContext = gl.getExtension("WEBGL_lose_context");
       if (loseContext) loseContext.loseContext();
     };

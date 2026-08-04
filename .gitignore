@@ -28,10 +28,9 @@ build/Release
 out/
 .nuxt
 
-# dotenv environment variable files
-.env
-.env.local
-.env.*.local
+# dotenv environment variable files (including examples and local variants)
+.env*
+*.env
 
 # npm cache directory
 .npm
@@ -123,4 +122,3 @@ out/
 
 # Built Visual Studio Code Extensions
 *.vsix
-frontend/.env.example

@@ -1,23 +1,24 @@
 /**
- * A horizontally-scrolling row of badge chips. Content is duplicated once so
- * the CSS keyframe (translateX 0 -> -50%) loops seamlessly. Under
- * prefers-reduced-motion the row-level CSS drops the animation and wraps the
- * (still duplicated) chips normally, so items render twice in that mode --
- * acceptable since the row still shows every skill and never scrolls.
+ * A horizontally-scrolling row of badge chips. Each sequence has its own
+ * measured gap so translating the complete track by exactly 50% lands on the
+ * next sequence without the tiny pause/jump the old flat list produced.
  */
 export default function Marquee({ items, reverse = false }) {
   return (
     <div className={`marquee-row${reverse ? " reverse" : ""}`}>
       <div className="marquee-track">
-        {items.map((item, i) => (
-          <span className="badge-emerald" key={`${item}-a-${i}`}>
-            {item}
-          </span>
-        ))}
-        {items.map((item, i) => (
-          <span className="badge-emerald marquee-dup" aria-hidden="true" key={`${item}-b-${i}`}>
-            {item}
-          </span>
+        {[false, true].map((duplicate) => (
+          <div
+            className={`marquee-group${duplicate ? " marquee-dup" : ""}`}
+            aria-hidden={duplicate || undefined}
+            key={duplicate ? "duplicate" : "primary"}
+          >
+            {items.map((item, i) => (
+              <span className="badge-emerald" key={`${item}-${duplicate ? "b" : "a"}-${i}`}>
+                {item}
+              </span>
+            ))}
+          </div>
         ))}
       </div>
     </div>
