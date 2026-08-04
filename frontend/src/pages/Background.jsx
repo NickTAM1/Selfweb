@@ -47,8 +47,15 @@ const ENTRIES = [
 
 export default function Background() {
   return (
-    <div className="container">
-      <h1>Background</h1>
+    <div className="container page-container">
+      <div className="page-intro">
+        <span className="mono-label accent">PROFILE // 01</span>
+        <h1>Background</h1>
+        <p>
+          A path from enterprise IT operations to systems-focused software development, shaped by
+          games, graphics, and a habit of digging into how things work.
+        </p>
+      </div>
       <div className="timeline">
         {ENTRIES.map((entry, index) => (
           <Reveal className="timeline-entry" key={entry.title} index={index}>

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Reveal from "../components/Reveal.jsx";
 import StatStrip from "../components/StatStrip.jsx";
-import Marquee from "../components/Marquee.jsx";
 import GitHubActivity from "../components/GitHubActivity.jsx";
 import { PROJECTS } from "./Projects.jsx";
 
@@ -46,11 +45,6 @@ const STATS = [
   { value: "BSc", label: "COMPUTING" },
 ];
 
-const ALL_SKILLS = SKILL_GROUPS.flatMap((group) => group.skills);
-const MARQUEE_SPLIT = Math.ceil(ALL_SKILLS.length / 2);
-const MARQUEE_ROW_1 = ALL_SKILLS.slice(0, MARQUEE_SPLIT);
-const MARQUEE_ROW_2 = ALL_SKILLS.slice(MARQUEE_SPLIT);
-
 const LANGUAGES = [
   { name: "Cantonese", level: "Native" },
   { name: "Mandarin", level: "Fluent" },
@@ -67,8 +61,10 @@ const LANGUAGES = [
 ];
 
 export default function Home() {
+  const skillCount = SKILL_GROUPS.reduce((total, group) => total + group.skills.length, 0);
+
   return (
-    <div className="container">
+    <div className="container home-container">
       <div className="hero">
         <Reveal as="span" className="status-pill" index={0}>
           <span className="status-dot" aria-hidden="true" />
@@ -129,12 +125,41 @@ export default function Home() {
         </div>
       </Reveal>
 
-      <Reveal className="box" index={3}>
-        <span className="mono-label">Technical Ecosystem</span>
-        <h2>Skills</h2>
-        <div className="marquee-section">
-          <Marquee items={MARQUEE_ROW_1} />
-          <Marquee items={MARQUEE_ROW_2} reverse />
+      <Reveal className="box skills-section" index={3}>
+        <div className="section-heading-row">
+          <div>
+            <span className="mono-label accent">CAPABILITY_MAP</span>
+            <h2>Skills</h2>
+          </div>
+          <span className="section-count">{skillCount} CORE SKILLS</span>
+        </div>
+        <p className="section-intro">
+          A practical stack across product surfaces, game systems, and the tools that connect them.
+        </p>
+        <div className="skills-dashboard">
+          {SKILL_GROUPS.map((group, groupIndex) => (
+            <div className="skill-cluster" key={group.title}>
+              <div className="skill-cluster-heading">
+                <span className="skill-cluster-index">0{groupIndex + 1}</span>
+                <div>
+                  <h3>{group.title}</h3>
+                  <span className="mono-label">{group.skills.length} DISCIPLINES</span>
+                </div>
+              </div>
+              <div className="skill-cloud">
+                {group.skills.map((skill) => (
+                  <span className="badge-emerald skill-chip" key={skill}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="skills-footer-line">
+          <span className="mono-label accent">STACK_SIGNAL</span>
+          <span className="skills-footer-rule" aria-hidden="true" />
+          <span className="mono-label">BUILD · DEBUG · SHIP</span>
         </div>
       </Reveal>
 

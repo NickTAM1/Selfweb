@@ -88,12 +88,29 @@ export default function Contact() {
   }
 
   return (
-    <div className="container">
-      <h1>Contact</h1>
+    <div className="container page-container contact-container">
+      <div className="page-intro">
+        <span className="mono-label accent">OPEN_CHANNEL // 03</span>
+        <h1>Contact</h1>
+        <p>
+          Have a project, role, or systems problem worth unpacking? Send a message and I&apos;ll get
+          back to you.
+        </p>
+      </div>
 
-      <Reveal className="box" index={0}>
-        <h2>Get in Touch</h2>
-        <div className="contact-link-row">
+      <div className="contact-layout">
+        <Reveal className="box contact-rail" index={0}>
+          <div className="section-heading-row">
+            <div>
+              <span className="mono-label accent">DIRECT_LINES</span>
+              <h2>Get in Touch</h2>
+            </div>
+            <span className="section-count">3 CHANNELS</span>
+          </div>
+          <p className="section-intro">
+            Prefer a quick connection? Choose a channel below or use the form beside it.
+          </p>
+          <div className="contact-link-row">
           <motion.a
             className="btn-glass btn-link btn-icon"
             href="mailto:2584718806q@gmail.com"
@@ -117,12 +134,27 @@ export default function Contact() {
             <LinkedinIcon />
           </motion.a>
           <IconPopover icon={<GithubIcon />} label="GitHub" items={GITHUB_ACCOUNTS} />
-        </div>
-      </Reveal>
+          </div>
+          <div className="contact-availability">
+            <span className="status-dot" aria-hidden="true" />
+            <div>
+              <span className="mono-label accent">STATUS</span>
+              <strong>Open to remote software roles</strong>
+              <span>Worldwide · UTC+8 friendly</span>
+            </div>
+          </div>
+        </Reveal>
 
-      <Reveal className="box" index={1}>
-        <h2>Send a Message</h2>
-        <form className="contact-form" onSubmit={handleSubmit}>
+        <Reveal className="box contact-form-box" index={1}>
+          <div className="section-heading-row">
+            <div>
+              <span className="mono-label accent">MESSAGE_PACKET</span>
+              <h2>Send a Message</h2>
+            </div>
+            <span className="section-count">REPLY VIA EMAIL</span>
+          </div>
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <div className="form-grid">
           <p>
             <label className="field-label" htmlFor="name">
               Name
@@ -130,6 +162,9 @@ export default function Contact() {
             <input
               id="name"
               type="text"
+              placeholder="Your name"
+              autoComplete="name"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -141,6 +176,9 @@ export default function Contact() {
             <input
               id="email"
               type="email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -152,25 +190,29 @@ export default function Contact() {
             <textarea
               id="message"
               rows={5}
+              placeholder="Tell me what you are building..."
+              required
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
           </p>
+            </div>
           <button className="btn-glass" type="submit" disabled={sending}>
             {sending ? "Sending..." : "Send"}
           </button>
-        </form>
-        <div className="form-status" role="status" aria-live="polite">
+          </form>
+          <div className="form-status" role="status" aria-live="polite">
           {status && (
             <p className={`form-note form-status-${status.kind}`}>{status.text}</p>
           )}
-        </div>
-        {!WEB3FORMS_CONFIGURED && (
-          <p className="form-note">
-            (Direct sending isn't configured yet, so this opens your email client instead.)
-          </p>
-        )}
-      </Reveal>
+          </div>
+          {!WEB3FORMS_CONFIGURED && (
+            <p className="form-note">
+              Direct sending is not configured, so submit opens your email client instead.
+            </p>
+          )}
+        </Reveal>
+      </div>
     </div>
   );
 }

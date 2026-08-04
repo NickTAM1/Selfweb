@@ -1787,3 +1787,422 @@ nav a:focus-visible {
     width: 100%;
   }
 }
+
+/* ---------- Cross-page UI pass ---------- */
+
+.page-container {
+  padding-top: 34px;
+}
+
+.page-intro {
+  position: relative;
+  margin: 10px 4px 30px;
+  padding: 8px 0 0 20px;
+  max-width: 700px;
+}
+
+.page-intro::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--emerald-light), transparent);
+  box-shadow: 0 0 18px var(--emerald-glow);
+}
+
+.page-intro h1 {
+  margin: 9px 0 10px;
+  font-size: clamp(42px, 7vw, 60px);
+}
+
+.page-intro p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--text);
+  font-size: 17px;
+  line-height: 160%;
+}
+
+.section-count {
+  flex: none;
+  padding: 5px 9px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.9px;
+  white-space: nowrap;
+}
+
+.section-intro {
+  max-width: 640px;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 155%;
+}
+
+/* Skills: a scan-friendly capability map instead of one long chip stream. */
+
+.skills-section {
+  background:
+    radial-gradient(circle at 0% 100%, rgba(16, 185, 129, 0.1), transparent 34%),
+    var(--glass-bg);
+}
+
+.skills-dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.skill-cluster {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: rgba(0, 0, 0, 0.2);
+  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.skill-cluster:hover {
+  border-color: var(--accent-border);
+  background: rgba(16, 185, 129, 0.07);
+  transform: translateY(-2px);
+}
+
+.skill-cluster-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.skill-cluster-heading h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+.skill-cluster-heading .mono-label {
+  font-size: 9px;
+  letter-spacing: 0.8px;
+}
+
+.skill-cluster-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--emerald-glow);
+  border: 1px solid var(--accent-border);
+  color: var(--emerald-light);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.skill-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 14px;
+}
+
+.skill-chip {
+  margin: 0;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: rgba(16, 185, 129, 0.08);
+  font-size: 11px;
+  line-height: 135%;
+}
+
+.skill-chip:hover {
+  color: var(--text-h);
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.skills-footer-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.skills-footer-line .mono-label {
+  flex: none;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.skills-footer-rule {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, var(--accent-border), transparent);
+}
+
+/* Background timeline: preserve the technical rail, but give each milestone
+   enough material contrast to read as a deliberate card. */
+
+.timeline-entry {
+  margin-bottom: 16px;
+  padding: 18px 22px 20px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.045);
+  box-shadow: var(--highlight-top);
+  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out);
+}
+
+.timeline-entry:hover {
+  border-color: var(--accent-border);
+  background: rgba(16, 185, 129, 0.07);
+  transform: translateX(3px);
+}
+
+.timeline-entry:last-child {
+  padding-bottom: 20px;
+}
+
+.timeline-entry h2 {
+  margin-bottom: 6px;
+  font-size: 20px;
+}
+
+.timeline-entry .timeline-meta {
+  color: var(--emerald-light);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+/* Projects: stronger case-study hierarchy and a more intentional footer row. */
+
+.projects-container .page-intro {
+  margin-bottom: 22px;
+}
+
+.project-card-compact {
+  padding: 22px;
+}
+
+.project-card-topline {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.project-card-topline .project-category {
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  flex: none;
+  border-radius: 50%;
+  color: var(--emerald-light);
+  background: var(--emerald-glow);
+  border: 1px solid var(--accent-border);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.project-card-topline .media-gallery-badge {
+  margin-left: auto;
+  flex: none;
+}
+
+.project-card-compact h2 {
+  font-size: 21px;
+  line-height: 125%;
+}
+
+.project-card-compact .badge-row {
+  margin-top: 14px;
+}
+
+.project-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.project-card-footer .mono-label {
+  font-size: 9px;
+}
+
+.project-card-footer .view-details-btn {
+  margin-top: 0;
+}
+
+.beyond-games {
+  background:
+    radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.1), transparent 38%),
+    var(--glass-bg);
+}
+
+/* Contact: put the decision (which channel?) next to the action (the form). */
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.contact-layout .box {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.contact-rail .section-heading-row,
+.contact-form-box .section-heading-row {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-link-row {
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.contact-availability {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 28px;
+  padding: 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.contact-availability .status-dot {
+  margin-top: 5px;
+}
+
+.contact-availability div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.contact-availability .mono-label {
+  font-size: 9px;
+}
+
+.contact-availability strong {
+  color: var(--text-h);
+  font-size: 14px;
+}
+
+.contact-availability div > span:last-child {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.contact-form {
+  margin-top: 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 14px;
+}
+
+.form-grid p:last-child {
+  grid-column: 1 / -1;
+}
+
+.contact-form input,
+.contact-form textarea {
+  max-width: none;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 0.75;
+}
+
+.contact-form > .btn-glass {
+  min-width: 128px;
+}
+
+@media (max-width: 760px) {
+  .skills-dashboard,
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-layout .box {
+    height: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .page-container {
+    padding-top: 20px;
+  }
+
+  .page-intro {
+    margin-bottom: 24px;
+  }
+
+  .page-intro h1 {
+    font-size: 42px;
+  }
+
+  .page-intro p {
+    font-size: 15px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid p:last-child {
+    grid-column: auto;
+  }
+
+  .project-card-topline {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .project-card-topline .media-gallery-badge {
+    width: 100%;
+    margin-left: 36px;
+  }
+}

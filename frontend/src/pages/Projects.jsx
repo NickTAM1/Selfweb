@@ -483,13 +483,16 @@ export default function Projects() {
   }
 
   return (
-    <div className="container">
-      <h1>Projects</h1>
+    <div className="container page-container projects-container">
+      <div className="page-intro">
+        <span className="mono-label accent">WORKLOG // 02</span>
+        <h1>Projects</h1>
       <p>
         Möbius Fish, the FFT generator, and Unreal DevTool have real capture
         footage; Radswing and Shopping Mall are placeholders until clips are
         added. Tap a project for the full engineering breakdown.
-      </p>
+        </p>
+      </div>
 
       <Reveal
         as="div"
@@ -519,7 +522,8 @@ export default function Projects() {
             index={i}
             onClick={() => openProject(project.id)}
           >
-            <div className="project-category-row">
+            <div className="project-card-topline">
+              <span className="project-index">{String(i + 1).padStart(2, "0")}</span>
               <span className="mono-label accent project-category">
                 {project.categoryLabel}
               </span>
@@ -536,6 +540,8 @@ export default function Projects() {
                 </span>
               ))}
             </div>
+            <div className="project-card-footer">
+              <span className="mono-label">CASE STUDY</span>
             <button
               type="button"
               className="btn-glass view-details-btn"
@@ -550,13 +556,20 @@ export default function Projects() {
             >
               View details →
             </button>
+            </div>
           </Reveal>
         ))}
       </div>
 
-      <Reveal className="box" index={visibleProjects.length}>
-        <h2>Beyond Games</h2>
-        <p>
+      <Reveal className="box beyond-games" index={visibleProjects.length}>
+        <div className="section-heading-row">
+          <div>
+            <span className="mono-label accent">EXPLORATION_NODE</span>
+            <h2>Beyond Games</h2>
+          </div>
+          <span className="section-count">SIDE PROJECTS</span>
+        </div>
+        <p className="section-intro">
           Outside of game systems, I keep building smaller self-development
           projects to stay sharp on the web and backend side: web scrapers,
           image-search tools, automation scripts, and AI-powered
