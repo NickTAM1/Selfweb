@@ -14,7 +14,9 @@ const EMPTY_STATS = {
 };
 
 function apiBaseUrl() {
-  return String(import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+  const configuredUrl = import.meta.env.VITE_API_BASE_URL;
+  const localDevelopmentUrl = import.meta.env.DEV ? "http://127.0.0.1:5000" : "";
+  return String(configuredUrl || localDevelopmentUrl).replace(/\/$/, "");
 }
 
 async function loadGitHubStats() {
@@ -56,13 +58,93 @@ async function loadGitHubStats() {
   };
 }
 
+async function loadGitHubContributions() {
+  const configuredApi = apiBaseUrl();
+  if (!configuredApi) {
+    throw new Error("VITE_API_BASE_URL is required for combined contributions");
+  }
+
+  const response = await fetch(`${configuredApi}/api/github/contributions`);
+  if (!response.ok) throw new Error(`GitHub contributions API returned ${response.status}`);
+  return response.json();
+}
+
 function displayNumber(value) {
   return typeof value === "number" ? value.toLocaleString() : "—";
+}
+
+function ContributionHeatmap({ state }) {
+  const data = state.data;
+  const hasCalendar = Boolean(data?.weeks?.length);
+  const statusLabel = data
+    ? data.source === "contribution-calendar"
+      ? "CONTRIBUTION CALENDAR"
+      : "PUBLIC ACTIVITY FALLBACK"
+    : state.status === "loading"
+      ? "SYNCING"
+      : "API REQUIRED";
+
+  return (
+    <div className="github-contributions">
+      <div className="contribution-heading">
+        <div>
+          <span className="mono-label accent">COMBINED_SIGNAL</span>
+          <h3>Contribution pulse</h3>
+        </div>
+        <span className="contribution-total">
+          {data ? `${displayNumber(data.total)} TOTAL` : statusLabel}
+        </span>
+      </div>
+      {hasCalendar ? (
+        <>
+          <div className="contribution-grid" aria-label="Combined GitHub contribution calendar">
+            {data.weeks.map((week, weekIndex) => (
+              <div className="contribution-week" key={`week-${weekIndex}`}>
+                {week.map((day) => (
+                  <span
+                    className={`contribution-cell contribution-level-${day.level}${day.in_range ? "" : " is-outside"}`}
+                    key={day.date}
+                    title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
+                    aria-label={`${day.count} contributions on ${day.date}`}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="contribution-footer">
+            <span className="mono-label">{data.label}</span>
+            <div className="contribution-legend" aria-hidden="true">
+              <span>Less</span>
+              {[0, 1, 2, 3, 4].map((level) => (
+                <span className={`contribution-cell contribution-level-${level}`} key={level} />
+              ))}
+              <span>More</span>
+            </div>
+          </div>
+          <div className="contribution-accounts">
+            {data.accounts.map((account) => (
+              <span key={account.login}>
+                <strong>{account.login}</strong> {displayNumber(account.total)}
+              </span>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="contribution-empty">
+          <span className="signal-dot" aria-hidden="true" />
+          <p>
+            Connect the Flask API to combine the last year of both GitHub contribution calendars.
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function GitHubActivity() {
   const [stats, setStats] = useState(EMPTY_STATS);
   const [loading, setLoading] = useState(true);
+  const [contributionState, setContributionState] = useState({ status: "loading", data: null });
 
   useEffect(() => {
     let active = true;
@@ -76,6 +158,14 @@ export default function GitHubActivity() {
       })
       .finally(() => {
         if (active) setLoading(false);
+      });
+
+    loadGitHubContributions()
+      .then((data) => {
+        if (active) setContributionState({ status: "ready", data });
+      })
+      .catch(() => {
+        if (active) setContributionState({ status: "error", data: null });
       });
 
     return () => {
@@ -96,8 +186,8 @@ export default function GitHubActivity() {
         </span>
       </div>
       <p className="github-intro">
-        Two public identities, one place to follow the work. Repo stars are included when the
-        optional Python service is connected.
+        Two public identities, one combined activity view. Repo stars and contribution history are
+        loaded through the optional Python service when it is connected.
       </p>
       <div className="github-metrics" aria-label="Combined GitHub metrics">
         <div className="github-metric">
@@ -113,6 +203,7 @@ export default function GitHubActivity() {
           <span className="mono-label">FOLLOWERS</span>
         </div>
       </div>
+      <ContributionHeatmap state={contributionState} />
       <div className="github-accounts">
         {stats.accounts.map((account) => (
           <motion.a

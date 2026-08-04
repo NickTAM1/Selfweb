@@ -770,6 +770,145 @@ nav a:focus-visible {
   font-size: 18px;
 }
 
+.github-contributions {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.contribution-heading,
+.contribution-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.contribution-heading h3 {
+  margin: 4px 0 0;
+  color: var(--text-h);
+  font-size: 16px;
+}
+
+.contribution-heading .mono-label {
+  font-size: 9px;
+}
+
+.contribution-total {
+  flex: none;
+  color: var(--emerald-light);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.contribution-grid {
+  display: grid;
+  grid-template-columns: repeat(53, minmax(4px, 1fr));
+  grid-template-rows: repeat(7, minmax(4px, 1fr));
+  grid-auto-flow: column;
+  gap: 3px;
+  height: 78px;
+  margin: 18px 0 12px;
+}
+
+.contribution-week {
+  display: contents;
+}
+
+.contribution-cell {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.contribution-level-0 {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.contribution-level-1 {
+  background: rgba(16, 185, 129, 0.24);
+}
+
+.contribution-level-2 {
+  background: rgba(16, 185, 129, 0.45);
+}
+
+.contribution-level-3 {
+  background: rgba(52, 211, 153, 0.7);
+}
+
+.contribution-level-4 {
+  background: var(--emerald-light);
+  box-shadow: 0 0 7px rgba(52, 211, 153, 0.28);
+}
+
+.contribution-cell.is-outside {
+  opacity: 0.18;
+}
+
+.contribution-footer {
+  align-items: flex-start;
+}
+
+.contribution-footer > .mono-label {
+  font-size: 9px;
+  letter-spacing: 0.7px;
+}
+
+.contribution-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.contribution-legend .contribution-cell {
+  width: 8px;
+  height: 8px;
+}
+
+.contribution-accounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.contribution-accounts strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.contribution-empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 42px;
+  margin-top: 16px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.contribution-empty .signal-dot {
+  margin-top: 5px;
+  flex: none;
+}
+
+.contribution-empty p {
+  margin: 0;
+}
+
 /* ---------- Tech marquee (Home) ---------- */
 
 .marquee-section {

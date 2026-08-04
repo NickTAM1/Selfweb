@@ -59,6 +59,8 @@ npm run dev
 
 For production, deploy the backend separately, set `CORS_ORIGIN` to the frontend origin, and provide `GITHUB_TOKEN` as a server secret if you need higher GitHub API limits. The static site remains functional if the API is unavailable.
 
+The home page combines both accounts into one contribution heatmap through `/api/github/contributions`. With no token, it shows a recent public-activity fallback. With a server-side token, it uses GitHub's full contribution calendar for each account; keep the token only in the backend environment and never in frontend code. For the deployed GitHub Pages build, set the Actions secret `VITE_API_BASE_URL` to the hosted Flask API URL.
+
 The contact form sends directly via Web3Forms if configured, otherwise it opens the visitor's email client. To enable direct sending, copy `frontend/.env.example` to `frontend/.env` and add a free access key from [web3forms.com](https://web3forms.com) (or set `VITE_WEB3FORMS_ACCESS_KEY` as a GitHub Actions repo secret for the deployed build).
 
 ## Deploying
