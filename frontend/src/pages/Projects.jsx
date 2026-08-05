@@ -499,7 +499,7 @@ export default function Projects() {
   return (
     <div className="container page-container projects-container">
       <div className="page-intro">
-        <span className="mono-label accent">WORKLOG // 02</span>
+        <span className="mono-label accent">SELECTED WORK</span>
         <h1>Projects</h1>
       <p>
         Möbius Fish, the FFT generator, and Unreal DevTool have real capture
@@ -583,7 +583,7 @@ export default function Projects() {
               ))}
             </div>
             <div className="project-card-footer">
-              <span className="mono-label">CASE STUDY</span>
+              <span className="mono-label">READ THE DETAILS</span>
             <button
               type="button"
               className="btn-glass view-details-btn"
@@ -605,7 +605,7 @@ export default function Projects() {
 
       {visibleProjects.length === 0 ? (
         <div className="project-empty-state" role="status">
-          <span className="mono-label accent">NO_MATCH_FOUND</span>
+          <span className="mono-label accent">NOTHING FOUND</span>
           <h2>Nothing fits that query yet.</h2>
           <p>Try a project title, technology, or a broader category.</p>
           <button
@@ -624,10 +624,10 @@ export default function Projects() {
       <Reveal className="box beyond-games" index={visibleProjects.length}>
         <div className="section-heading-row">
           <div>
-            <span className="mono-label accent">EXPLORATION_NODE</span>
+            <span className="mono-label accent">OTHER THINGS I BUILD</span>
             <h2>Beyond Games</h2>
           </div>
-          <span className="section-count">SIDE PROJECTS</span>
+          <span className="section-count">EXTRA WORK</span>
         </div>
         <p className="section-intro">
           Outside of game systems, I keep building smaller self-development

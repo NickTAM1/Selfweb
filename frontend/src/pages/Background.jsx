@@ -49,7 +49,7 @@ export default function Background() {
   return (
     <div className="container page-container">
       <div className="page-intro">
-        <span className="mono-label accent">PROFILE // 01</span>
+        <span className="mono-label accent">FROM THERE TO HERE</span>
         <h1>Background</h1>
         <p>
           A path from enterprise IT operations to systems-focused software development, shaped by

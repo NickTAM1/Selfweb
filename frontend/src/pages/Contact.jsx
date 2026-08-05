@@ -90,7 +90,7 @@ export default function Contact() {
   return (
     <div className="container page-container contact-container">
       <div className="page-intro">
-        <span className="mono-label accent">OPEN_CHANNEL // 03</span>
+        <span className="mono-label accent">SAY HELLO</span>
         <h1>Contact</h1>
         <p>
           Have a project, role, or systems problem worth unpacking? Send a message and I&apos;ll get
@@ -102,7 +102,7 @@ export default function Contact() {
         <Reveal className="box contact-rail" index={0}>
           <div className="section-heading-row">
             <div>
-              <span className="mono-label accent">DIRECT_LINES</span>
+              <span className="mono-label accent">FIND ME HERE</span>
               <h2>Get in Touch</h2>
             </div>
             <span className="section-count">3 CHANNELS</span>
@@ -148,7 +148,7 @@ export default function Contact() {
         <Reveal className="box contact-form-box" index={1}>
           <div className="section-heading-row">
             <div>
-              <span className="mono-label accent">MESSAGE_PACKET</span>
+              <span className="mono-label accent">SEND A NOTE</span>
               <h2>Send a Message</h2>
             </div>
             <span className="section-count">REPLY VIA EMAIL</span>

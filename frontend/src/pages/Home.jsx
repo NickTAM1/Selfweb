@@ -93,8 +93,8 @@ export default function Home() {
           <span className="status-dot" aria-hidden="true" />
           <span className="mono-label accent">Open to work &middot; Remote worldwide</span>
         </Reveal>
-        <Reveal as="span" className="hero-eyebrow" index={1}>
-          Junior Software Developer
+        <Reveal as="span" className="hero-role" index={1}>
+          Junior software developer · game systems, web &amp; backend
         </Reveal>
         <Reveal as="h1" index={2}>
           Chi Lek (Nick) Tam
@@ -151,7 +151,7 @@ export default function Home() {
       <Reveal className="box skills-section" index={3}>
         <div className="section-heading-row">
           <div>
-            <span className="mono-label accent">CAPABILITY_MAP</span>
+            <span className="mono-label accent">MY STACK</span>
             <h2>Skills</h2>
           </div>
           <span className="section-count">{skillCount} CORE SKILLS</span>
@@ -226,14 +226,14 @@ export default function Home() {
           </div>
         )}
         <div className="skills-footer-line">
-          <span className="mono-label accent">STACK_SIGNAL</span>
+          <span className="mono-label accent">HOW I WORK</span>
           <span className="skills-footer-rule" aria-hidden="true" />
           <span className="mono-label">BUILD · DEBUG · SHIP</span>
         </div>
       </Reveal>
 
       <Reveal className="box specialty-node" index={4}>
-        <span className="mono-label accent">SYSTEMS_NODE</span>
+        <span className="mono-label accent">THE DEEP END</span>
         <h2>Game Systems &amp; Simulation</h2>
         <p>
           Engine-level physics is where I do my deepest work: custom boat

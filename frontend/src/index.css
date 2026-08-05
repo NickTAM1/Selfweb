@@ -7,17 +7,17 @@
   --accent-border: rgba(16, 185, 129, 0.45);
 
   /* Real glass material */
-  --glass-bg: rgba(255, 255, 255, 0.055);
-  --glass-bg-strong: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-bg: rgba(5, 19, 22, 0.72);
+  --glass-bg-strong: rgba(7, 24, 27, 0.86);
+  --glass-border: rgba(167, 243, 208, 0.16);
   --glass-blur: 18px;
   --glass-sat: 175%;
   --shadow-lift: 0 12px 36px rgba(0, 0, 0, 0.45);
   --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.16);
 
-  --r-sm: 10px;
-  --r-md: 16px;
-  --r-lg: 22px;
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 18px;
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

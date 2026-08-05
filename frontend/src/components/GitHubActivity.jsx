@@ -218,8 +218,8 @@ function ContributionHeatmap({ state }) {
     <div className="github-contributions">
       <div className="contribution-heading">
         <div>
-          <span className="mono-label accent">COMBINED_SIGNAL</span>
-          <h3>Contribution pulse</h3>
+          <span className="mono-label accent">COMBINED ACTIVITY</span>
+          <h3>A year of making things</h3>
         </div>
         <span className="contribution-total">
           {contributionSummary}
@@ -320,7 +320,7 @@ export default function GitHubActivity() {
     <Reveal className="box github-activity" index={1}>
       <div className="section-heading-row">
         <div>
-          <span className="mono-label accent">LIVE_SIGNAL</span>
+          <span className="mono-label accent">GITHUB ACTIVITY</span>
           <h2>GitHub activity</h2>
         </div>
         <span className={`signal-state${loading ? " is-loading" : ""}`}>
@@ -329,8 +329,8 @@ export default function GitHubActivity() {
         </span>
       </div>
       <p className="github-intro">
-        Two public identities, one combined activity view. Repo stars and contribution history are
-        loaded through the optional Python service, with a direct browser fallback when it is offline.
+        I keep two public GitHub identities. This view puts their public work in one place: repos,
+        stars, followers, and the contribution history behind the projects.
       </p>
       <div className="github-metrics" aria-label="Combined GitHub metrics">
         <div className="github-metric">
