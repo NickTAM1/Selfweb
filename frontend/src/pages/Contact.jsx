@@ -93,8 +93,8 @@ export default function Contact() {
         <span className="mono-label accent">SAY HELLO</span>
         <h1>Contact</h1>
         <p>
-          Have a project, role, or systems problem worth unpacking? Send a message and I&apos;ll get
-          back to you.
+          Tell me what you&apos;re building, what role you&apos;re hiring for, or what
+          system is giving you trouble. I&apos;ll get back to you.
         </p>
       </div>
 

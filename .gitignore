@@ -122,3 +122,4 @@ out/
 
 # Built Visual Studio Code Extensions
 *.vsix
+frontend/CONTENT_GUIDE.md

@@ -7,7 +7,7 @@ const ENTRIES = [
     dates: "2024 – Present",
     detail: (
       <>
-        <p>Focus: Full-stack Development, Mobile App Development, Game Programming</p>
+        <p>Focus: Full stack development, mobile app development, and game programming</p>
         <p>English for Creative Arts (ECA) Program, completed 2024 &middot; GPA: 79.52/100</p>
       </>
     ),
@@ -24,10 +24,10 @@ const ENTRIES = [
     dates: "Sep – Nov 2021",
     detail: (
       <ul className="highlights">
-        <li>Conducted system testing for slot-machine data reading and updating</li>
+        <li>Tested systems that read and update slot machine data</li>
         <li>Performed data validation and quality assurance for gaming systems</li>
         <li>Collaborated with the IT team on system integration and troubleshooting</li>
-        <li>Gained enterprise-level IT operations experience in the hospitality sector</li>
+        <li>Gained enterprise level IT experience in the hospitality sector</li>
       </ul>
     ),
   },
@@ -52,8 +52,9 @@ export default function Background() {
         <span className="mono-label accent">FROM THERE TO HERE</span>
         <h1>Background</h1>
         <p>
-          A path from enterprise IT operations to systems-focused software development, shaped by
-          games, graphics, and a habit of digging into how things work.
+          I moved from enterprise IT operations into systems focused software
+          development through games, graphics, and a habit of asking how
+          things work.
         </p>
       </div>
       <div className="timeline">

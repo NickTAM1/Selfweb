@@ -100,9 +100,9 @@ export default function Home() {
           Chi Lek (Nick) Tam
         </Reveal>
         <Reveal as="p" className="hero-pitch" index={3}>
-          Full-stack developer who also builds game systems: UE5 physics
-          and AI, plus web, mobile, and backend. I build the parts under the
-          hood and figure out why they break.
+          I build game systems, web apps, and backend tools. My strongest work
+          is UE5 physics and AI, and I enjoy tracing a bug all the way to the
+          part underneath it.
         </Reveal>
         <Reveal as="div" className="hero-cta" index={4}>
           <Link className="btn-glass btn-primary" to="/projects">
@@ -127,13 +127,15 @@ export default function Home() {
       <Reveal className="box" index={1}>
         <h2>About</h2>
         <p>
-          Junior Software Developer with a BSc in Computing (Macao Polytechnic
-          University) and recent full-stack training from Vancouver Film
-          School, comfortable across multiple languages and platforms. Brings
-          enterprise IT experience from the gaming industry (Melco Resorts,
-          casino floor systems), plus standout engine-level work: UE5 boat
-          buoyancy and fluid physics, C++ State Tree AI, and FFT ocean-wave
-          simulation. Open to remote software development roles worldwide.
+          I’m a junior software developer with a BSc in Computing and recent
+          full stack training from Vancouver Film School. I work across games,
+          web, mobile, and backend systems.
+        </p>
+        <p>
+          My best work so far includes UE5 boat buoyancy, C++ State Tree AI,
+          and FFT ocean wave simulation. Before software development, I worked
+          in enterprise IT for the gaming industry, so I care about both the
+          code and the system around it.
         </p>
       </Reveal>
 
@@ -157,7 +159,7 @@ export default function Home() {
           <span className="section-count">{skillCount} CORE SKILLS</span>
         </div>
         <p className="section-intro">
-          A practical stack across product surfaces, game systems, and the tools that connect them.
+          The languages, engines, and tools I use most often across games, web apps, and backend work.
         </p>
         <div className="skill-explorer-controls">
           <div className="skill-filter-tabs" role="group" aria-label="Filter skills by area">
@@ -228,7 +230,7 @@ export default function Home() {
         <div className="skills-footer-line">
           <span className="mono-label accent">HOW I WORK</span>
           <span className="skills-footer-rule" aria-hidden="true" />
-          <span className="mono-label">BUILD · DEBUG · SHIP</span>
+          <span className="mono-label">BUILD · TEST · SHIP</span>
         </div>
       </Reveal>
 
@@ -236,9 +238,9 @@ export default function Home() {
         <span className="mono-label accent">THE DEEP END</span>
         <h2>Game Systems &amp; Simulation</h2>
         <p>
-          Engine-level physics is where I do my deepest work: custom boat
-          buoyancy and fluid dynamics in UE5, C++ State Tree AI, and an FFT
-          ocean-wave simulation taken from O(N&#8308;) down to O(N log N).
+          This is where I do my deepest technical work: custom boat buoyancy
+          and fluid dynamics in UE5, C++ State Tree AI, and an FFT ocean wave
+          simulation that brings the cost down from O(N&#8308;) to O(N log N).
         </p>
         <div className="node-rows">
           <div className="node-row">

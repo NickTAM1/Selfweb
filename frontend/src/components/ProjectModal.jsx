@@ -187,14 +187,17 @@ export default function ProjectModal({ project, onClose }) {
         <>
           {project && modalPhase !== "ready" && (
             <motion.div
-              className="project-modal-bloom"
+              className="project-modal-loader"
               variants={MODAL_BLOOM_VARIANTS}
               initial="closed"
               animate="open"
               transition={{ duration: 1.5, ease: "easeInOut" }}
               onAnimationComplete={() => setModalPhase("ready")}
               aria-hidden="true"
-            />
+            >
+              <span className="project-modal-loader-ring" />
+              <span className="project-modal-bloom" />
+            </motion.div>
           )}
 
           <motion.div

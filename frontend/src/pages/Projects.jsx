@@ -14,9 +14,9 @@ export const PROJECTS = [
     id: "mobius-fish",
     category: "UE5",
     categoryLabel: "UE5 // GAME SYSTEMS",
-    title: "Möbius Fish (UE5 3D Water-Based Tower Defense Roguelike)",
+    title: "Möbius Fish (UE5 3D Water Based Tower Defense Roguelike)",
     summary:
-      "A 3D top-down tower defense roguelike built around real fluid dynamics: a physically simulated boat has to survive waves of water-based enemies with their own StateTree-driven AI.",
+      "A top down tower defense game where a boat survives waves of water based enemies driven by StateTree AI.",
     badges: ["Unreal Engine 5", "C++", "State Tree", "Physics Simulation", "Firebase"],
     media: [
       { type: "video", src: "/Selfweb/media/mobius-gameplay.mp4", label: "UE5 Gameplay Capture" },
@@ -24,23 +24,22 @@ export const PROJECTS = [
       { type: "image", src: "/Selfweb/media/mobius-level-1.jpg", label: "Level 1 Gameplay" },
       { type: "image", src: "/Selfweb/media/mobius-level-3.jpg", label: "Level 3 Combat" },
       { type: "image", src: "/Selfweb/media/mobius-level-4.jpg", label: "Level 4 Combat" },
-      { type: "image", src: "/Selfweb/media/mobius-boat-closeup.jpg", label: "Boat Buoyancy Close-up" },
+      { type: "image", src: "/Selfweb/media/mobius-boat-closeup.jpg", label: "Boat Buoyancy Close Up" },
     ],
     highlights: [
-      "C++ StateTree AI with a direct-velocity + NavMesh hybrid movement model",
-      "Custom boat buoyancy with smooth roll correction and self-righting torque",
+      "C++ StateTree AI with direct movement and NavMesh help when enemies are far away",
+      "Custom boat buoyancy with smooth roll correction and a torque that helps the boat stand up",
       "Chose plain C++ StateTree over Mass Entity for lower setup overhead and lower CPU cost at this enemy count",
-      "Firebase backend integration for a real-time online leaderboard",
+      "Firebase backend connection for an online leaderboard that updates quickly",
       "Scalable core systems, custom game modes, and UI save logic",
     ],
     detail: (
       <details className="deep-dive">
-        <summary>Engineering deep-dive</summary>
+        <summary>How it works</summary>
         <div className="deep-dive-body">
           <p>
-            Core C++ systems engineering for a 3D top-down tower defense game
-            featuring dynamic fluid dynamics, custom boat buoyancy, and
-            multi-priority AI enemies.
+            This is a 3D top down tower defense game with moving water,
+            custom boat buoyancy, and enemies with different goals.
           </p>
           <ul>
             <li>
@@ -76,7 +75,7 @@ export const PROJECTS = [
             </li>
           </ul>
           <p>
-            <strong>Trade-off:</strong> evaluated Mass State Tree for the AI
+            <strong>Choice I made:</strong> I tested Mass State Tree for the AI
             layer, but rejected it since it is incompatible with ACharacter,
             animation Blueprints, and adds architectural setup overhead that
             does not pay off at this enemy count. Stayed with regular C++
@@ -108,9 +107,9 @@ BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
     id: "radswing",
     category: "Unity",
     categoryLabel: "UNITY // GAME SYSTEMS",
-    title: "Radswing (Fast-Paced First-Person Kick Fighter)",
+    title: "Radswing (Fast Paced First Person Kick Fighter)",
     summary:
-      "A first-person kick fighter where momentum is the weapon: sprint, slide, and double-jump into enemies, kicking them back harder the faster you're moving.",
+      "A first person kick fighter where speed controls knockback. Sprint, slide, and jump into enemies to send them flying.",
     badges: ["Unity", "C#", "Physics Mechanics", "AI Behavior"],
     media: [
       { type: "video", src: "/Selfweb/media/radswing-demo.mp4", label: "Radswing Gameplay Capture" },
@@ -120,13 +119,13 @@ BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
       { type: "image", src: "/Selfweb/media/radswing-4.jpg", label: "Radswing Screenshot 4" },
     ],
     highlights: [
-      "Momentum-based kick (F) that scales knockback with player speed",
+      "A kick that sends enemies farther when the player is moving faster",
       "Three distinct enemy archetypes: Melee, Range, and Tank",
-      "NavMesh warp fix so enemies resume pathing from their real position after a knockback, instead of snapping back",
+      "NavMesh warp fix so enemies resume from their real position after a knockback instead of snapping back",
     ],
     detail: (
       <details className="deep-dive">
-        <summary>Engineering deep-dive</summary>
+        <summary>How it works</summary>
         <div className="deep-dive-body">
           <p>
             A first person kick fighter: walk, run, slide, double jump, and
@@ -171,7 +170,7 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
     categoryLabel: "GRAPHICS // SIMULATION",
     title: "FFT Ocean Wave Generator",
     summary:
-      "Simulates realistic ocean waves using FFT and the Phillips spectrum, exporting the results as animated 3D meshes for Blender.",
+      "A C++ simulation that turns FFT ocean wave data into animated 3D meshes for Blender.",
     badges: ["C++", "Fast Fourier Transform", "Phillips Spectrum", "3D Mesh Export"],
     media: [
       { type: "video", src: "/Selfweb/media/fft-demo.mp4", label: "FFT Ocean Wave Render" },
@@ -181,21 +180,21 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
       { type: "image", src: "/Selfweb/media/fft-4.jpg", label: "FFT Ocean Screenshot 4" },
     ],
     highlights: [
-      "Radix-2 Cooley-Tukey IFFT brings a per-frame heightmap from O(N⁴) down to O(N log N), making real-time generation practical",
-      "Chose the Phillips spectrum over JONSWAP for its longer track record of published verification on a solo, time-boxed project",
+      "Radix 2 Cooley Tukey IFFT brings each height map from O(N⁴) down to O(N log N), making fast generation practical",
+      "Chose the Phillips spectrum because it had more clear tests for a solo project with limited time",
       "Exported animated OBJ sequences (positions, normals, faces) that composite into an animation in Blender, no plugins required",
     ],
     detail: (
       <details className="deep-dive">
-        <summary>Engineering deep-dive</summary>
+        <summary>How it works</summary>
         <div className="deep-dive-body">
           <p>
             <strong>Problem:</strong> wave generation is a key feature in
-            games and film, but true fluid-dynamics simulation is too
+            games and film, but true fluid dynamics simulation is too
             computationally expensive to run in real time on ordinary
             hardware. The goal was a realistic, animatable ocean surface
             without a full fluid solver, and without requiring the end user
-            to own high-spec equipment.
+            to own powerful equipment.
           </p>
 
           <p className="deep-dive-subhead">
@@ -208,22 +207,22 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
               more modern choice in recent research, but Phillips spectrum
               has been in use since 2003 and has a longer track record of
               published verification, which mattered more for a solo,
-              time-boxed project than using the newest method.
+              short project than using the newest method.
             </li>
             <li>
-              <strong>FFT/IFFT over direct spatial summation.</strong>{" "}
+              <strong>FFT and IFFT over direct spatial summation.</strong>{" "}
               Direct summation of the wave field is O(N⁴) and unusable in
-              real time. A Radix-2 Cooley-Tukey IFFT over a bit-reversed
+              real time. A Radix 2 Cooley Tukey IFFT over a bit reversed
               butterfly diagram brings that down to O(N log N), which is
               what makes generating a full heightmap per frame practical at
               all.
             </li>
             <li>
-              <strong>Offline OBJ export over a live in-engine solver.</strong>{" "}
-              Building a real-time GPU solver was outside the scope and
+              <strong>OBJ export instead of a live engine solver.</strong>{" "}
+              Building a real time GPU solver was outside the scope and
               hardware constraints of a solo project, so the tool exports
               animated OBJ mesh sequences that get composited into an
-              animation in Blender afterward. That traded real-time
+              animation in Blender afterward. That traded real time
               interactivity for something that reliably works on ordinary
               hardware and any standard 3D package, no plugins required.
             </li>
@@ -233,16 +232,16 @@ animator.SetTrigger("Hit"); // fires once and resets itself automatically`}</pre
             <strong>Result:</strong> the generator successfully produces 3D
             animated ocean wave meshes that import cleanly into standard 3D
             software with no plugins, on ordinary hardware. It reports real
-            per-frame output at runtime, confirmed empirically rather than
+            output for each frame, checked by running the program rather than
             just visually, e.g. a console run reported "Max Displacement =
             0.94244" at t = 0.
           </p>
           <p>
-            <strong>Honest limitation / what&apos;s next:</strong> given
+            <strong>Limit and next step:</strong> given
             more time, the next steps would be moving to the JONSWAP
-            spectrum for more accurate real-world grounding, porting the
-            generation to GPU compute for real-time speed (it currently runs
-            offline / pre-baked, not live), and generating the animation
+            spectrum for a closer match to real world waves, moving the
+            generation to GPU compute for real time speed. It currently runs
+            ahead of time, not live, and creates the animation
             directly instead of manually compositing OBJ sequences in
             Blender afterward.
           </p>
@@ -281,7 +280,7 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
     categoryLabel: "RUST // DEV TOOLING",
     title: "Unreal DevTool",
     summary:
-      "A Windows desktop app that consolidates UE5 packaging, VS project regeneration, Git management, and build diagnostics into a single GUI, with a local-LLM chat assistant built in.",
+      "A Windows app that brings UE5 packaging, project setup, Git tasks, and build diagnostics into one place.",
     badges: ["Rust", "egui", "Unreal Engine 5", "Git Automation", "Local LLM"],
     media: [
       { type: "video", src: "/Selfweb/media/unrealdevtool-demo.mp4", label: "Live Demo" },
@@ -307,13 +306,13 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       },
     ],
     highlights: [
-      "Automated fix for a real UE5 UAT/UBT bug -- spaces in file paths -- via NTFS directory junctions",
-      "Built-in AI chat assistant that auto-detects local Ollama/LM Studio servers",
-      "One tool for packaging, Git, and build diagnostics, self-updating via GitHub Actions releases",
+      "Fixed a UE5 build problem caused by spaces in file paths",
+      "Built in AI chat assistant that finds local Ollama and LM Studio servers",
+      "One tool for packaging, Git, and build checks that can update itself",
     ],
     detail: (
       <details className="deep-dive">
-        <summary>Engineering deep-dive</summary>
+        <summary>How it works</summary>
         <div className="deep-dive-body">
           <p>
             <strong>Problem:</strong> UE5 developers juggle several
@@ -330,21 +329,21 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
           <ul>
             <li>
               <strong>Rust + egui for the UI.</strong> A deliberate choice to
-              learn a systems language and an immediate-mode GUI framework
-              rather than staying in a comfort-zone stack.
+              learn a systems language and a GUI framework instead of staying
+              with tools I already knew.
             </li>
             <li>
               <strong>NTFS directory junctions to solve the UAT/UBT
-              spaces-in-path build failure.</strong> Unreal&apos;s build
+              spaces in file paths.</strong> Unreal&apos;s build
               tooling has a real, documented limitation where file paths
               containing spaces cause build failures. Instead of just telling
               users to avoid spaces in their folder names, the tool
-              automatically creates space-free NTFS directory junctions as
+              automatically creates a path with no spaces as
               path aliases so the build system never sees the problematic
               path.
             </li>
             <li>
-              <strong>Local-LLM chat (Ollama/LM Studio auto-detection) over a
+              <strong>Local AI chat that finds Ollama and LM Studio over a
               cloud AI API.</strong> Keeps the assistant free and usable
               offline for anyone running the tool, at the cost of needing a
               local model server running.
@@ -352,18 +351,16 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
           </ul>
 
           <p>
-            <strong>Result:</strong> ships as a self-updating ~75MB Windows
-            executable (bundling rclone for its Google Drive-based
-            distribution), with GitHub Actions automating release builds and
-            the app checking for updates on startup and every 5 minutes
-            after, replacing itself in place. MIT licensed.
+            <strong>Result:</strong> it ships as a Windows app of about 75MB.
+            GitHub Actions builds new releases, and the app checks for updates
+            when it starts. It is MIT licensed.
           </p>
           <p>
             <strong>Honest note:</strong> this was my first real project in
             Rust, and my first time writing PowerShell/cmd automation and
             working with Unreal&apos;s UAT/UBT internals closely enough to
             work around one of its real bugs. A deliberate stretch, not a
-            comfort-zone project.
+            familiar project.
           </p>
 
           <div className="project-actions">
@@ -383,10 +380,10 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
   {
     id: "shopping-mall",
     category: "Web",
-    categoryLabel: "PHP // FULL-STACK WEB",
+    categoryLabel: "PHP // FULL STACK WEB",
     title: "Shopping Mall",
     summary:
-      "\"Mobile Shop\": an online shopping platform for smartphones across four brands (Samsung, Sony, Huawei, Xiaomi), built with two teammates for a university systems course. User auth, a brand-filtered product catalog with image uploads, a shopping cart, and purchase order tracking.",
+      "A university team project for buying smartphones online, with accounts, product filters, a cart, and order tracking.",
     badges: ["PHP", "Laravel", "MySQL", "Vue 2", "Bootstrap"],
     media: [
       { type: "image", src: "/Selfweb/media/shoppingmall-1.jpg", label: "Storefront (guest view)" },
@@ -395,16 +392,16 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
       { type: "image", src: "/Selfweb/media/shoppingmall-4.jpg", label: "Purchase Orders" },
     ],
     highlights: [
-      "21 defined requirements across catalog, accounts, cart, and order tracking, built and demoed as a 3-person team",
-      "Brand-filtered product catalog (Samsung, Sony, Huawei, Xiaomi) with an admin-managed image upload flow",
-      "Shopping cart and purchase order tracking with order status (Pending/Hold) visible to the customer",
+      "21 requirements across the catalog, accounts, cart, and orders, built and shown by a three person team",
+      "Brand filtered product catalog with an image upload tool for the store manager",
+      "A shopping cart and order history with the order status shown to the customer",
     ],
     detail: (
       <details className="deep-dive">
-        <summary>Engineering deep-dive</summary>
+      <summary>How it works</summary>
         <div className="deep-dive-body">
           <p>
-            &quot;Mobile Shop&quot; was a 3-person team project for COMP321
+            &quot;Mobile Shop&quot; was a three person team project for COMP321
             (Information System Implementation), a university course on
             information system design and delivery. Working with two
             teammates, I helped build an online shopping platform for
@@ -413,18 +410,18 @@ double Trager1 = (inputI1 - Y * inputR2 + X * inputI2) * 0.5;`}</pre>
             product listing, customer accounts, the shopping cart, purchase
             order tracking, catalog maintenance, and order processing, the
             features you can see across the screenshots below (brand
-            filtering on the storefront, a logged-in customer view with
+            filtering on the storefront, a customer view after login with
             pricing, a product detail page with an Add to Cart flow, and
             purchase order history with Pending/Hold status tracking).
           </p>
           <p>
             The version submitted for the course ran on WampServer locally
             with PHP, MySQL, and phpMyAdmin for schema/data management. The
-            codebase itself is a Laravel 8 app: Auth, Cart, Product, and Home
+            project itself is a Laravel 8 app: Auth, Cart, Product, and Home
             controllers; Product, Cart, CartItem, File, and User models;
             Blade templates for the storefront, cart, and admin views; and
-            frontend assets (JS/CSS/Sass) compiled through Laravel Mix with a
-            Vue 2-driven frontend.
+            frontend assets (JS, CSS, and Sass) compiled through Laravel Mix
+            with a Vue 2 frontend.
           </p>
           <p>
             <strong>Stack:</strong> PHP 7.3+/8.0, Laravel 8, MySQL,
@@ -502,9 +499,9 @@ export default function Projects() {
         <span className="mono-label accent">SELECTED WORK</span>
         <h1>Projects</h1>
       <p>
-        Möbius Fish, the FFT generator, and Unreal DevTool have real capture
-        footage; Radswing and Shopping Mall are placeholders until clips are
-        added. Tap a project for the full engineering breakdown.
+          These projects cover UE5 game systems, graphics research, developer
+          tools, and full stack web work. Open one to see the problem, the
+          decisions I made, and the result.
         </p>
       </div>
 
@@ -630,12 +627,11 @@ export default function Projects() {
           <span className="section-count">EXTRA WORK</span>
         </div>
         <p className="section-intro">
-          Outside of game systems, I keep building smaller self-development
-          projects to stay sharp on the web and backend side: web scrapers,
-          image-search tools, automation scripts, and AI-powered
-          applications. It&apos;s ongoing, hands-on practice with the same
-          problem-solving habits: reading unfamiliar systems, breaking
-          problems down, and shipping something that works.
+          Outside of game systems, I build small projects to keep learning web
+          and backend work. These include web scrapers, image search tools,
+          automation scripts, and AI applications. Each one helps me practice
+          reading new systems, breaking problems into steps, and shipping
+          something that works.
         </p>
         <div className="badge-row">
           <span className="badge-emerald">Python</span>

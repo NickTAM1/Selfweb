@@ -1521,6 +1521,18 @@ nav a:focus-visible {
   opacity: 1;
 }
 
+.project-modal-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 160px;
+  height: 160px;
+  margin: -80px 0 0 -80px;
+  transform-origin: center;
+  pointer-events: none;
+}
+
 .project-modal-bloom {
   position: absolute;
   top: 50%;
@@ -1544,6 +1556,59 @@ nav a:focus-visible {
   pointer-events: none;
   transform: translate(-50%, -50%);
   animation: modal-orb-glow 1.5s var(--ease-emphasized) both;
+}
+
+.project-modal-loader-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 142px;
+  height: 142px;
+  border: 2px solid rgba(52, 211, 153, 0.12);
+  border-top-color: rgba(167, 243, 208, 0.94);
+  border-right-color: rgba(16, 185, 129, 0.68);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 8px rgba(16, 185, 129, 0.04),
+    0 0 34px rgba(16, 185, 129, 0.24),
+    inset 0 0 18px rgba(16, 185, 129, 0.08);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: modal-loader-spin 950ms linear infinite, modal-loader-breathe 1.5s var(--ease-emphasized) both;
+}
+
+.project-modal-loader-ring::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border: 1px dashed rgba(110, 231, 183, 0.34);
+  border-left-color: transparent;
+  border-radius: inherit;
+  animation: modal-loader-spin 1.7s linear infinite reverse;
+}
+
+.project-modal-loader-ring::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d1fae5;
+  box-shadow: 0 0 12px 3px rgba(110, 231, 183, 0.78);
+  transform: translateX(-50%);
+}
+
+@keyframes modal-loader-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes modal-loader-breathe {
+  0% { opacity: 0; scale: 0.72; }
+  28% { opacity: 1; scale: 1; }
+  100% { opacity: 0.92; scale: 1.04; }
 }
 
 .project-modal-bloom::before {
