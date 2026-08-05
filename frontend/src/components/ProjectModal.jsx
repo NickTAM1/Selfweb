@@ -3,8 +3,13 @@ import { motion } from "motion/react";
 import MediaGallery from "./MediaGallery.jsx";
 
 const MODAL_BLOOM_VARIANTS = {
-  closed: { scale: 0.28, opacity: 0, rotate: -12 },
-  open: { scale: 1, opacity: 1, rotate: 0 },
+  closed: { scale: 0.28, opacity: 0, y: 24, rotate: -12 },
+  open: {
+    scale: [0.28, 1.08, 0.96, 1],
+    opacity: [0, 1, 1, 1],
+    y: [24, -18, 10, 0],
+    rotate: [-12, 6, -3, 0],
+  },
 };
 
 const MODAL_CONTENT_VARIANTS = {
@@ -186,7 +191,7 @@ export default function ProjectModal({ project, onClose }) {
               variants={MODAL_BLOOM_VARIANTS}
               initial="closed"
               animate="open"
-              transition={{ type: "spring", stiffness: 420, damping: 28 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
               onAnimationComplete={() => setModalPhase("ready")}
               aria-hidden="true"
             />

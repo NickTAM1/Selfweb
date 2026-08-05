@@ -4,6 +4,219 @@
   flex: 1;
 }
 
+/* ---------- Ambient clock + back-to-top control ---------- */
+
+.ambient-tools {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.ambient-clock,
+.back-to-top {
+  pointer-events: auto;
+}
+
+.ambient-clock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px 9px 9px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgba(6, 17, 21, 0.76);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.38), 0 0 24px rgba(16, 185, 129, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.ambient-clock-face {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  flex: none;
+  border: 1px solid rgba(52, 211, 153, 0.52);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(209, 250, 229, 0.2), transparent 17%),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.16), transparent 64%),
+    rgba(2, 44, 34, 0.64);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.06), 0 0 24px rgba(16, 185, 129, 0.22),
+    inset 0 0 18px rgba(0, 0, 0, 0.32);
+}
+
+.ambient-clock-face::before,
+.ambient-clock-face::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(167, 243, 208, 0.12);
+  border-radius: 50%;
+}
+
+.ambient-clock-face::after {
+  inset: 50% 7px auto;
+  height: 1px;
+  border: 0;
+  background: rgba(167, 243, 208, 0.1);
+  transform: rotate(45deg);
+  transform-origin: center;
+}
+
+.ambient-clock-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  color: rgba(209, 250, 229, 0.7);
+  font-family: var(--mono);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(calc(var(--marker-index) * 45deg)) translateY(-23px)
+    rotate(calc(var(--marker-index) * -45deg));
+}
+
+.clock-hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 2px;
+  border-radius: 999px;
+  transform-origin: 50% 100%;
+}
+
+.clock-hand-hour {
+  height: 16px;
+  background: var(--text-h);
+}
+
+.clock-hand-minute {
+  height: 22px;
+  background: var(--emerald-light);
+}
+
+.clock-hand-second {
+  height: 25px;
+  width: 1px;
+  background: #fda4af;
+  transform-origin: 50% 100%;
+  animation: ambient-clock-sweep 60s linear infinite;
+}
+
+@keyframes ambient-clock-sweep {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+.clock-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--text-h);
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 10px var(--emerald-light);
+  transform: translate(-50%, -50%);
+}
+
+.ambient-clock-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 84px;
+}
+
+.ambient-clock-readout strong {
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.4px;
+  line-height: 1.1;
+}
+
+.ambient-clock-readout span {
+  overflow: hidden;
+  color: var(--emerald-light);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.8px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.back-to-top {
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-color: var(--accent-border);
+  background: rgba(16, 185, 129, 0.16);
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.back-to-top:hover {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+.back-to-top::after {
+  right: 0;
+  left: auto;
+  transform: translate(0, 4px);
+}
+
+.back-to-top:hover::after,
+.back-to-top:focus-visible::after {
+  transform: translate(0, 0);
+}
+
+@media (max-width: 640px) {
+  .ambient-tools {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .ambient-clock {
+    padding-right: 10px;
+  }
+
+  .ambient-clock-face {
+    width: 54px;
+    height: 54px;
+  }
+
+  .ambient-clock-marker {
+    transform: translate(-50%, -50%) rotate(calc(var(--marker-index) * 45deg)) translateY(-20px)
+      rotate(calc(var(--marker-index) * -45deg));
+  }
+
+  .ambient-clock-readout strong {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clock-hand-second {
+    animation: none;
+    transform: translateX(-50%) rotate(0deg);
+  }
+}
+
 /* Wraps the animated route content (see AnimatedRoutes in App.jsx). The
    zoom transition animates `scale`/`opacity` via transform, which never
    affects layout flow/width, but this belt-and-suspenders rule guarantees
@@ -1337,13 +1550,45 @@ nav a:focus-visible {
   height: 76px;
   border: 1px solid rgba(110, 231, 183, 0.72);
   border-radius: 50%;
-  background:
-    radial-gradient(circle, rgba(167, 243, 208, 0.8) 0%, rgba(52, 211, 153, 0.32) 32%, transparent 72%);
+  background: radial-gradient(
+    circle at 32% 26%,
+    #d1fae5 0 5%,
+    #6ee7b7 13%,
+    #10b981 38%,
+    #047857 70%,
+    #022c22 100%
+  );
   box-shadow:
     0 0 0 10px rgba(16, 185, 129, 0.08),
     0 0 44px rgba(52, 211, 153, 0.58);
   pointer-events: none;
   transform: translate(-50%, -50%);
+  animation: modal-orb-glow 1.5s var(--ease-emphasized) both;
+}
+
+.project-modal-bloom::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 16px;
+  width: 16px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(236, 253, 245, 0.7);
+  filter: blur(2px);
+  transform: rotate(-24deg);
+}
+
+@keyframes modal-orb-glow {
+  0% {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.04), 0 0 18px rgba(52, 211, 153, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 16px rgba(16, 185, 129, 0.1), 0 0 62px rgba(52, 211, 153, 0.72);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.08), 0 0 44px rgba(52, 211, 153, 0.58);
+  }
 }
 
 .project-modal-inner {

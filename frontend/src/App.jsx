@@ -6,6 +6,7 @@ import Background from "./pages/Background.jsx";
 import Projects from "./pages/Projects.jsx";
 import Contact from "./pages/Contact.jsx";
 import WaveBackground from "./components/WaveBackground.jsx";
+import AmbientClock from "./components/AmbientClock.jsx";
 import useCardGlow from "./hooks/useCardGlow.js";
 import useRipple from "./hooks/useRipple.js";
 import useScrollDirection from "./hooks/useScrollDirection.js";
@@ -129,6 +130,7 @@ export default function App() {
       <WaveBackground />
       <SegmentedNav hidden={navHidden} />
       <AnimatedRoutes />
+      <AmbientClock />
       <footer className="site-footer">
         <p>&copy; {new Date().getFullYear()} Chi Lek (Nick) Tam</p>
       </footer>
