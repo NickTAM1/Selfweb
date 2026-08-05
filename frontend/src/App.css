@@ -81,8 +81,8 @@
   font-weight: 700;
   letter-spacing: -0.3px;
   text-align: center;
-  transform: translate(-50%, -50%) rotate(calc(var(--marker-index) * 45deg)) translateY(-23px)
-    rotate(calc(var(--marker-index) * -45deg));
+  transform: translate(-50%, -50%) rotate(calc(var(--marker-index) * 30deg)) translateY(-23px)
+    rotate(calc(var(--marker-index) * -30deg));
 }
 
 .clock-hand {
@@ -201,8 +201,8 @@
   }
 
   .ambient-clock-marker {
-    transform: translate(-50%, -50%) rotate(calc(var(--marker-index) * 45deg)) translateY(-20px)
-      rotate(calc(var(--marker-index) * -45deg));
+    transform: translate(-50%, -50%) rotate(calc(var(--marker-index) * 30deg)) translateY(-20px)
+      rotate(calc(var(--marker-index) * -30deg));
   }
 
   .ambient-clock-readout strong {
@@ -229,9 +229,9 @@
 }
 
 .container {
-  max-width: 760px;
+  max-width: 820px;
   margin: 0 auto;
-  padding: 24px 24px 40px;
+  padding: 28px 24px 56px;
   text-align: left;
 }
 
@@ -240,12 +240,13 @@
 }
 
 .container p {
-  line-height: 165%;
+  max-width: 72ch;
+  line-height: 170%;
 }
 
 .container li {
-  line-height: 160%;
-  margin-bottom: 10px;
+  line-height: 170%;
+  margin-bottom: 12px;
 }
 
 .container li:last-child {
@@ -357,8 +358,8 @@ nav a:focus-visible {
   border: 1px solid var(--glass-border);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lift), var(--highlight-top);
-  padding: 26px 28px;
-  margin-bottom: 22px;
+  padding: 30px;
+  margin-bottom: 24px;
   text-align: left;
 }
 
@@ -418,6 +419,7 @@ nav a:focus-visible {
 
 .box h2 {
   margin-top: 0;
+  margin-bottom: 12px;
 }
 
 .box > .mono-label:first-child {
@@ -681,9 +683,9 @@ nav a:focus-visible {
 .mono-label {
   font-family: var(--mono);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-size: 12px;
-  font-weight: 600;
+  letter-spacing: 1.1px;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--text-dim);
 }
 
@@ -796,34 +798,22 @@ nav a:focus-visible {
 .stat-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 0;
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
   margin-bottom: 22px;
 }
 
 .stat-tile {
   position: relative;
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  border: 1px solid var(--glass-border);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-lift), var(--highlight-top);
-  padding: 18px 16px;
+  min-width: 0;
+  padding: 16px 18px 16px 0;
   text-align: left;
 }
 
-.stat-tile::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+.stat-tile + .stat-tile {
+  padding-left: 18px;
+  border-left: 1px solid var(--glass-border);
 }
 
 .stat-value {
@@ -843,28 +833,19 @@ nav a:focus-visible {
 /* Cursor-tracking edge-light "spotlight" glow, mirroring .box::after (see
    above). Position is written by useCardGlow.js as plain --mx/--my DOM style
    properties; visibility is handled entirely by :hover below. */
-.stat-tile::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    220px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(52, 211, 153, 0.14),
-    transparent 65%
-  );
-  opacity: 0;
-  transition: opacity var(--t-fast) var(--ease-out);
-  pointer-events: none;
-}
-
-.stat-tile:hover::after {
-  opacity: 1;
-}
-
 @media (max-width: 640px) {
   .stat-strip {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-tile:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .stat-tile:nth-child(4) {
+    border-top: 1px solid var(--glass-border);
   }
 }
 
@@ -989,8 +970,9 @@ nav a:focus-visible {
 
 .github-intro {
   max-width: 560px;
-  color: var(--text-dim);
-  font-size: 15px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 165%;
 }
 
 .github-metrics {
@@ -2224,14 +2206,6 @@ nav a:focus-visible {
     opacity: 1 !important;
   }
 
-  .stat-tile::after {
-    transition: opacity var(--t-fast) var(--ease-out) !important;
-  }
-
-  .stat-tile:hover::after {
-    opacity: 1 !important;
-  }
-
   .project-card-compact {
     transition: transform var(--t-fast) var(--ease-out),
       border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out) !important;
@@ -2393,9 +2367,9 @@ nav a:focus-visible {
 
 .section-intro {
   max-width: 640px;
-  color: var(--text-dim);
-  font-size: 15px;
-  line-height: 155%;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 165%;
 }
 
 /* Skills: a scan-friendly capability map instead of one long chip stream. */

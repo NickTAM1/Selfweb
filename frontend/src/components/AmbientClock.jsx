@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-const CLOCK_MARKERS = ["12", "3×4", "π", "√121", "2×3", "e⁰", "∞", "14/2"];
+const CLOCK_MARKERS = Array.from({ length: 12 }, (_, index) => String((index + 11) % 12 + 1));
 
 function formatTime(value) {
   return new Intl.DateTimeFormat(undefined, {

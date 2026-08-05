@@ -26,13 +26,13 @@
   --t-base: 260ms;
   --t-slow: 400ms;
 
-  --text: #b7c2c9;
+  --text: #c5d0d5;
   --text-h: #f8fafc;
-  --text-dim: #7d8b95;
+  --text-dim: #9aaab2;
   --code-bg: rgba(0, 0, 0, 0.35);
   --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --mono: var(--sans);
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -207,4 +207,11 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+/* Code keeps its technical shape; all interface copy uses the same sans-serif
+   family so the reading experience stays consistent across every route. */
+code,
+pre {
+  font-family: ui-monospace, Consolas, monospace;
 }
