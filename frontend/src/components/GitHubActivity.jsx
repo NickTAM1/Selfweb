@@ -60,13 +60,111 @@ async function loadGitHubStats() {
 
 async function loadGitHubContributions() {
   const configuredApi = apiBaseUrl();
-  if (!configuredApi) {
-    throw new Error("VITE_API_BASE_URL is required for combined contributions");
+  if (configuredApi) {
+    try {
+      const response = await fetch(`${configuredApi}/api/github/contributions`);
+      if (response.ok) return response.json();
+    } catch {
+      // The browser fallback below keeps the chart useful when Flask is offline.
+    }
   }
 
-  const response = await fetch(`${configuredApi}/api/github/contributions`);
-  if (!response.ok) throw new Error(`GitHub contributions API returned ${response.status}`);
-  return response.json();
+  try {
+    const accountCounts = await Promise.all(
+      ACCOUNTS.map(async (account) => {
+        const response = await fetch(`https://api.github.com/users/${account.login}/events/public?per_page=100`, {
+          headers: { Accept: "application/vnd.github+json" },
+        });
+        if (!response.ok) throw new Error(`GitHub activity returned ${response.status}`);
+
+        const counts = {};
+        const events = await response.json();
+        events.forEach((event) => {
+          const date = event.created_at?.slice(0, 10);
+          if (!date) return;
+          const amount = event.type === "PushEvent"
+            ? Math.max(1, event.payload?.commits?.length || 0)
+            : 1;
+          counts[date] = (counts[date] || 0) + amount;
+        });
+        return { login: account.login, counts };
+      }),
+    );
+
+    return buildContributionPayload(accountCounts, "github-public-events", "Public activity snapshot");
+  } catch {
+    return buildContributionPayload(
+      ACCOUNTS.map((account) => ({ login: account.login, counts: {} })),
+      "local-preview",
+      "Offline visual preview — live activity unavailable",
+    );
+  }
+}
+
+function contributionLevel(count, maximum) {
+  if (!count || !maximum) return 0;
+  const ratio = count / maximum;
+  if (ratio <= 0.25) return 1;
+  if (ratio <= 0.5) return 2;
+  if (ratio <= 0.75) return 3;
+  return 4;
+}
+
+function buildContributionWeeks(dayCounts) {
+  const today = new Date();
+  const todayUtc = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const yearAgo = new Date(todayUtc);
+  yearAgo.setUTCDate(yearAgo.getUTCDate() - 364);
+  const start = new Date(yearAgo);
+  start.setUTCDate(start.getUTCDate() - start.getUTCDay());
+  const end = new Date(todayUtc);
+  end.setUTCDate(end.getUTCDate() + (6 - end.getUTCDay()));
+  const maximum = Math.max(...Object.values(dayCounts), 0);
+  const weeks = [];
+
+  for (let cursor = new Date(start); cursor <= end; cursor.setUTCDate(cursor.getUTCDate() + 7)) {
+    const week = [];
+    for (let offset = 0; offset < 7; offset += 1) {
+      const current = new Date(cursor);
+      current.setUTCDate(current.getUTCDate() + offset);
+      const date = current.toISOString().slice(0, 10);
+      const count = dayCounts[date] || 0;
+      week.push({
+        date,
+        count,
+        level: contributionLevel(count, maximum),
+        in_range: current >= yearAgo && current <= todayUtc,
+      });
+    }
+    weeks.push(week);
+  }
+
+  return weeks;
+}
+
+function buildContributionPayload(accountCounts, source, label) {
+  const combinedCounts = {};
+  accountCounts.forEach(({ counts }) => {
+    Object.entries(counts).forEach(([date, count]) => {
+      combinedCounts[date] = (combinedCounts[date] || 0) + count;
+    });
+  });
+  const weeks = buildContributionWeeks(combinedCounts);
+
+  return {
+    source,
+    label,
+    synced_at: new Date().toISOString(),
+    accounts: accountCounts.map(({ login, counts }) => ({
+      login,
+      total: Object.values(counts).reduce((total, count) => total + count, 0),
+    })),
+    total: weeks.reduce(
+      (total, week) => total + week.reduce((weekTotal, day) => weekTotal + (day.in_range ? day.count : 0), 0),
+      0,
+    ),
+    weeks,
+  };
 }
 
 function displayNumber(value) {
@@ -102,10 +200,19 @@ function ContributionHeatmap({ state }) {
   const statusLabel = data
     ? data.source === "contribution-calendar"
       ? "CONTRIBUTION CALENDAR"
+      : data.source === "github-public-events"
+        ? "PUBLIC EVENTS"
+        : data.source === "local-preview"
+          ? "LOCAL PREVIEW"
       : "PUBLIC ACTIVITY FALLBACK"
     : state.status === "loading"
       ? "SYNCING"
-      : "API REQUIRED";
+      : "LOCAL PREVIEW";
+  const contributionSummary = data?.source === "local-preview"
+    ? "OFFLINE VISUAL PREVIEW"
+    : data
+      ? `${displayNumber(data.total)} contributions in the last year`
+      : statusLabel;
 
   return (
     <div className="github-contributions">
@@ -115,7 +222,7 @@ function ContributionHeatmap({ state }) {
           <h3>Contribution pulse</h3>
         </div>
         <span className="contribution-total">
-          {data ? `${displayNumber(data.total)} contributions in the last year` : statusLabel}
+          {contributionSummary}
         </span>
       </div>
       {hasCalendar ? (
@@ -169,7 +276,7 @@ function ContributionHeatmap({ state }) {
         <div className="contribution-empty">
           <span className="signal-dot" aria-hidden="true" />
           <p>
-            Connect the Flask API to combine the last year of both GitHub contribution calendars.
+            Combining both GitHub activity feeds in the browser...
           </p>
         </div>
       )}
@@ -223,7 +330,7 @@ export default function GitHubActivity() {
       </div>
       <p className="github-intro">
         Two public identities, one combined activity view. Repo stars and contribution history are
-        loaded through the optional Python service when it is connected.
+        loaded through the optional Python service, with a direct browser fallback when it is offline.
       </p>
       <div className="github-metrics" aria-label="Combined GitHub metrics">
         <div className="github-metric">
