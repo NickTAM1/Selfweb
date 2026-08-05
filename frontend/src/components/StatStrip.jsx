@@ -60,18 +60,18 @@ function StatTile({ value, label, index }) {
       rafId = requestAnimationFrame(tick);
     };
 
-    // Bidirectional, mirroring Reveal's `once: false` pop-in: replay the
-    // count-up from 0 every time the tile re-enters the viewport, and reset
-    // back to 0 when it leaves so it's ready to animate again next entry
-    // (consistent with the surrounding boxes, which also pop back out).
+    let hasAnimated = false;
+
+    // Count each stat once. Restarting an rAF counter every time the user
+    // scrolls past the strip created needless React updates and made long
+    // pages feel uneven, especially while the background shader was active.
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (rafId) cancelAnimationFrame(rafId);
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && !hasAnimated) {
+            hasAnimated = true;
             runCountUp();
-          } else {
-            setDisplay(0);
           }
         });
       },
@@ -108,7 +108,7 @@ function StatTile({ value, label, index }) {
       ref={ref}
       initial={{ opacity: 0, scale: 0.9, y: 22 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{ type: "spring", stiffness: 260, damping: 22, delay }}
     >
       <span className="stat-value">{display}</span>

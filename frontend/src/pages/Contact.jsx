@@ -206,11 +206,6 @@ export default function Contact() {
             <p className={`form-note form-status-${status.kind}`}>{status.text}</p>
           )}
           </div>
-          {!WEB3FORMS_CONFIGURED && (
-            <p className="form-note">
-              Direct sending is not configured, so submit opens your email client instead.
-            </p>
-          )}
         </Reveal>
       </div>
     </div>

@@ -89,12 +89,14 @@ body::after {
     radial-gradient(circle at 38% 78%, rgba(167, 243, 208, 0.38) 0 1px, transparent 1.5px),
     radial-gradient(circle at 88% 86%, rgba(52, 211, 153, 0.4) 0 1px, transparent 1.6px);
   background-size: 170px 190px, 230px 260px, 310px 280px, 390px 330px;
-  animation: star-drift 42s linear infinite;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  animation: star-drift 48s linear infinite;
 }
 
 @keyframes star-drift {
-  from { background-position: 0 0, 40px 0, 0 20px, 80px 40px; }
-  to { background-position: 170px 190px, -190px 260px, 310px -260px, -310px 330px; }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(18px, 12px, 0); }
 }
 
 #root {

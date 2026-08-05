@@ -37,7 +37,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
   float value = 0.0;
   float amp = 0.5;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 3; i++) {
     value += amp * noise(p);
     p *= 2.02;
     amp *= 0.5;
@@ -183,6 +183,7 @@ export default function WaveBackground() {
     if (!setupGlResources()) return undefined;
 
     let rafId = null;
+    let lastDrawTime = 0;
     let disposed = false;
     const startTime = performance.now();
 
@@ -203,10 +204,12 @@ export default function WaveBackground() {
     }
 
     // Internal render resolution is capped and downscaled: this is a soft,
-    // blurred backdrop, so it never needs to be pixel-crisp.
+    // blurred backdrop, so it never needs to be pixel-crisp. Mobile gets a
+    // lower resolution because the background is decorative and should never
+    // compete with the interactive page for GPU time.
     function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const downscale = 0.75;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      const downscale = window.innerWidth < 700 ? 0.45 : 0.55;
       const width = Math.max(1, Math.floor(window.innerWidth * dpr * downscale));
       const height = Math.max(1, Math.floor(window.innerHeight * dpr * downscale));
       if (canvas.width !== width || canvas.height !== height) {
@@ -230,12 +233,15 @@ export default function WaveBackground() {
 
     function renderLoop(now) {
       if (disposed) return;
-      // Lerp the smoothed cursor position toward the latest raw pointer
-      // position once per frame -- this is the only per-frame mouse work,
-      // keeping the pointermove handler itself trivial.
-      mouseSmooth.x += (mouseTarget.x - mouseSmooth.x) * 0.08;
-      mouseSmooth.y += (mouseTarget.y - mouseSmooth.y) * 0.08;
-      drawFrame((now - startTime) / 1000);
+      // The ambient background only needs 30fps. The page content and native
+      // browser scrolling remain on the normal display frame rate, while the
+      // expensive fragment shader is evaluated half as often.
+      if (now - lastDrawTime >= 1000 / 30) {
+        mouseSmooth.x += (mouseTarget.x - mouseSmooth.x) * 0.12;
+        mouseSmooth.y += (mouseTarget.y - mouseSmooth.y) * 0.12;
+        drawFrame((now - startTime) / 1000);
+        lastDrawTime = now;
+      }
       rafId = requestAnimationFrame(renderLoop);
     }
 

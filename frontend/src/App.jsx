@@ -6,17 +6,10 @@ import Background from "./pages/Background.jsx";
 import Projects from "./pages/Projects.jsx";
 import Contact from "./pages/Contact.jsx";
 import WaveBackground from "./components/WaveBackground.jsx";
-import IconPopover from "./components/IconPopover.jsx";
-import { GithubIcon, LinkedinIcon } from "./components/icons.jsx";
 import useCardGlow from "./hooks/useCardGlow.js";
 import useRipple from "./hooks/useRipple.js";
 import useScrollDirection from "./hooks/useScrollDirection.js";
 import "./App.css";
-
-const GITHUB_ACCOUNTS = [
-  { label: "NickTAM1", href: "https://github.com/NickTAM1" },
-  { label: "HUKLIA", href: "https://github.com/HUKLIA" },
-];
 
 const NAV_ITEMS = [
   { to: "/", label: "Home", end: true },
@@ -137,21 +130,6 @@ export default function App() {
       <SegmentedNav hidden={navHidden} />
       <AnimatedRoutes />
       <footer className="site-footer">
-        <div className="footer-links">
-          <IconPopover icon={<GithubIcon />} label="GitHub" items={GITHUB_ACCOUNTS} />
-          <motion.a
-            className="btn-glass btn-link btn-icon"
-            href="https://www.linkedin.com/in/chilek-tam-huzi"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="LinkedIn"
-            data-tooltip="LinkedIn"
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <LinkedinIcon />
-          </motion.a>
-        </div>
         <p>&copy; {new Date().getFullYear()} Chi Lek (Nick) Tam</p>
       </footer>
     </HashRouter>

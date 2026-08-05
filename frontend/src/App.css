@@ -105,7 +105,7 @@ nav a.active {
 }
 
 .nav-active-pill {
-  z-index: -1;
+  z-index: 0;
   background: var(--emerald-glow);
   border: 1px solid var(--accent-border);
   box-shadow: 0 0 22px rgba(16, 185, 129, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -161,7 +161,6 @@ nav a:focus-visible {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-  animation: glass-sheen 14s ease-in-out infinite;
 }
 
 /* Cursor-tracking edge-light "spotlight" glow. Sits in the ::after slot so it
@@ -187,6 +186,11 @@ nav a:focus-visible {
 
 .box:hover::after {
   opacity: 1;
+}
+
+.box:hover::before,
+.box:focus-within::before {
+  animation: glass-sheen 900ms var(--ease-out) both;
 }
 
 @keyframes glass-sheen {
@@ -247,6 +251,7 @@ nav a:focus-visible {
 .btn-glass {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -650,6 +655,59 @@ nav a:focus-visible {
   .stat-strip {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* Shared sliding highlight: every interactive button gets the same small
+   glass sweep, so filters, modal controls, social buttons, and primary CTAs
+   feel like one coherent control system. */
+.btn-glass::before,
+.filter-tab::before,
+.skill-filter-tab::before,
+.modal-close::before,
+.media-nav::before,
+.media-thumb::before,
+.skill-search-clear::before,
+.project-search-clear::before {
+  content: "";
+  position: absolute;
+  inset: -80% -55%;
+  z-index: -1;
+  background: linear-gradient(
+    112deg,
+    transparent 37%,
+    rgba(167, 243, 208, 0.06) 44%,
+    rgba(52, 211, 153, 0.34) 50%,
+    rgba(255, 255, 255, 0.16) 55%,
+    transparent 63%
+  );
+  opacity: 0;
+  transform: translateX(-62%) rotate(8deg);
+  pointer-events: none;
+}
+
+.btn-glass:hover::before,
+.btn-glass:focus-visible::before,
+.filter-tab:hover::before,
+.filter-tab:focus-visible::before,
+.skill-filter-tab:hover::before,
+.skill-filter-tab:focus-visible::before,
+.modal-close:hover::before,
+.modal-close:focus-visible::before,
+.media-nav:hover::before,
+.media-nav:focus-visible::before,
+.media-thumb:hover::before,
+.media-thumb:focus-visible::before,
+.skill-search-clear:hover::before,
+.skill-search-clear:focus-visible::before,
+.project-search-clear:hover::before,
+.project-search-clear:focus-visible::before {
+  opacity: 1;
+  animation: button-sweep 680ms var(--ease-out) both;
+}
+
+@keyframes button-sweep {
+  from { transform: translateX(-62%) rotate(8deg); }
+  to { transform: translateX(62%) rotate(8deg); }
 }
 
 /* ---------- GitHub activity signal ---------- */
@@ -1733,18 +1791,6 @@ nav a:focus-visible {
   color: var(--text-dim);
   font-size: 14px;
   border-top: 1px solid var(--glass-border);
-}
-
-.site-footer .footer-links {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 10px;
-}
-
-.site-footer .footer-links .btn-glass {
-  font-size: 13px;
 }
 
 /* ---------- Contact links ---------- */
