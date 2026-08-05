@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { HashRouter, Routes, Route, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Home from "./pages/Home.jsx";
@@ -18,8 +18,57 @@ const GITHUB_ACCOUNTS = [
   { label: "HUKLIA", href: "https://github.com/HUKLIA" },
 ];
 
-function navLinkClass({ isActive }) {
-  return isActive ? "active" : "";
+const NAV_ITEMS = [
+  { to: "/", label: "Home", end: true },
+  { to: "/background", label: "Background" },
+  { to: "/projects", label: "Projects" },
+  { to: "/contact", label: "Contact" },
+];
+
+function SegmentedNav({ hidden }) {
+  const [hoveredPath, setHoveredPath] = useState(null);
+  const location = useLocation();
+  const visibleHoverPath = location.pathname === hoveredPath ? hoveredPath : null;
+
+  return (
+    <motion.nav
+      aria-label="Primary navigation"
+      animate={{ y: hidden ? "-140%" : "0%", opacity: hidden ? 0 : 1 }}
+      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+      onMouseLeave={() => setHoveredPath(null)}
+    >
+      {NAV_ITEMS.map((item) => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          end={item.end}
+          onMouseEnter={() => setHoveredPath(item.to)}
+        >
+          {({ isActive }) => (
+            <>
+              {isActive ? (
+                <motion.span
+                  className="nav-active-pill"
+                  layoutId="nav-active-pill"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  aria-hidden="true"
+                />
+              ) : null}
+              {!isActive && visibleHoverPath === item.to ? (
+                <motion.span
+                  className="nav-hover-pill"
+                  layoutId="nav-hover-pill"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  aria-hidden="true"
+                />
+              ) : null}
+              <span className="nav-label">{item.label}</span>
+            </>
+          )}
+        </NavLink>
+      ))}
+    </motion.nav>
+  );
 }
 
 /**
@@ -85,23 +134,7 @@ export default function App() {
   return (
     <HashRouter>
       <WaveBackground />
-      <motion.nav
-        animate={{ y: navHidden ? "-140%" : "0%", opacity: navHidden ? 0 : 1 }}
-        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <NavLink to="/" end className={navLinkClass}>
-          Home
-        </NavLink>
-        <NavLink to="/background" className={navLinkClass}>
-          Background
-        </NavLink>
-        <NavLink to="/projects" className={navLinkClass}>
-          Projects
-        </NavLink>
-        <NavLink to="/contact" className={navLinkClass}>
-          Contact
-        </NavLink>
-      </motion.nav>
+      <SegmentedNav hidden={navHidden} />
       <AnimatedRoutes />
       <footer className="site-footer">
         <div className="footer-links">

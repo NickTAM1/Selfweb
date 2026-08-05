@@ -12,10 +12,10 @@ const MAX_DELAY = 0.36;
  * - `whileInView` fires as soon as the element is (or becomes) intersecting,
  *   which covers content that is already in the viewport on first paint
  *   (e.g. above-the-fold hero/stat elements) as well as content scrolled
- *   into view later. `once: false` makes this bidirectional: the element
- *   animates back to `initial` (shrink + fade) whenever it leaves the
- *   viewport in either direction, then pops back in on re-entry -- so it
- *   must never get stuck on the "hidden" side, either. This is purely a
+ *   into view later. `once: true` keeps the content visible after the first
+ *   reveal instead of sending cards back to hidden opacity when they leave
+ *   the viewport -- content should never appear to vanish while browsing.
+ *   This is purely a
  *   presentational effect on the wrapping motion element; it's never used
  *   to gate real state (e.g. the Projects modal is a separate <dialog>, not
  *   wrapped in Reveal, so its open/close state can't be coupled to this).
@@ -49,7 +49,7 @@ export default function Reveal({
       className={className}
       initial={{ opacity: 0, scale: 0.9, y: 22 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: false, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.12 }}
       transition={{ type: "spring", stiffness: 260, damping: 22, delay }}
       {...rest}
     >
