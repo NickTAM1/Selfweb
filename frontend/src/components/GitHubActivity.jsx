@@ -171,6 +171,20 @@ function displayNumber(value) {
   return typeof value === "number" ? value.toLocaleString() : "—";
 }
 
+function getContributionAccounts(data) {
+  return Array.isArray(data?.accounts) ? data.accounts : [];
+}
+
+function getCombinedContributionTotal(data) {
+  const accounts = getContributionAccounts(data);
+  if (!accounts.length) return data?.total;
+
+  return accounts.reduce(
+    (total, account) => total + (typeof account.total === "number" ? account.total : 0),
+    0,
+  );
+}
+
 function getMonthLabels(weeks) {
   const labels = [];
   let previousMonth = "";
@@ -197,10 +211,15 @@ function ContributionHeatmap({ state }) {
   const data = state.data;
   const hasCalendar = Boolean(data?.weeks?.length);
   const monthLabels = hasCalendar ? getMonthLabels(data.weeks) : [];
+  const contributionAccounts = getContributionAccounts(data);
+  const combinedTotal = getCombinedContributionTotal(data);
+  const accountSummary = contributionAccounts
+    .map((account) => `${account.login} ${displayNumber(account.total)}`)
+    .join(" · ");
   const statusLabel = data
     ? data.source === "contribution-calendar"
       ? "CONTRIBUTION CALENDAR"
-      : data.source === "github-public-events"
+      : data.source === "github-public-events" || data.source === "public-events"
         ? "PUBLIC EVENTS"
         : data.source === "local-preview"
           ? "LOCAL PREVIEW"
@@ -211,7 +230,7 @@ function ContributionHeatmap({ state }) {
   const contributionSummary = data?.source === "local-preview"
     ? "OFFLINE VISUAL PREVIEW"
     : data
-      ? `${displayNumber(data.total)} contributions in the last year`
+      ? `${displayNumber(combinedTotal)} ${data.source === "contribution-calendar" ? "contributions in the last year" : "recent public events"}`
       : statusLabel;
 
   return (
@@ -222,7 +241,8 @@ function ContributionHeatmap({ state }) {
           <h3>A year of making things</h3>
         </div>
         <span className="contribution-total">
-          {contributionSummary}
+          <span>{contributionSummary}</span>
+          {accountSummary ? <small>{accountSummary}</small> : null}
         </span>
       </div>
       {hasCalendar ? (

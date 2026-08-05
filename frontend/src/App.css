@@ -742,15 +742,30 @@ nav a:focus-visible {
 /* ---------- Hero (Home) ---------- */
 
 .hero {
+  position: relative;
   text-align: left;
-  padding: 40px 4px 8px;
+  margin: 10px 4px 30px;
+  padding: 8px 0 8px 20px;
+  max-width: 700px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--emerald-light), transparent);
+  box-shadow: 0 0 18px var(--emerald-glow);
 }
 
 .hero-role {
-  display: inline-block;
+  display: block;
+  margin: 0 0 8px;
   color: var(--text);
-  border-left: 2px solid var(--emerald-light);
-  padding: 2px 0 2px 12px;
+  padding: 0;
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.2px;
@@ -758,14 +773,14 @@ nav a:focus-visible {
 }
 
 .hero h1 {
-  margin: 14px 0 12px;
+  margin: 9px 0 10px;
 }
 
 .hero-pitch {
-  font-size: 19px;
-  line-height: 155%;
+  max-width: 650px;
+  font-size: 17px;
+  line-height: 160%;
   color: var(--text);
-  max-width: 620px;
 }
 
 .hero-cta {
@@ -1105,6 +1120,15 @@ nav a:focus-visible {
   letter-spacing: 0.6px;
   line-height: 145%;
   text-align: right;
+}
+
+.contribution-total small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.35px;
 }
 
 .contribution-calendar {

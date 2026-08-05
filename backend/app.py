@@ -189,7 +189,7 @@ def build_contributions():
     weeks = build_calendar(combined)
     return {
         "source": source,
-        "label": "Combined contributions" if source == "contribution-calendar" else "Recent public activity",
+        "label": "Both GitHub contribution calendars" if source == "contribution-calendar" else "Both GitHub public activity feeds",
         "synced_at": datetime.now(timezone.utc).isoformat(),
         "accounts": [
             {"login": login, "total": sum(counts.values())}
