@@ -1,10 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import MediaGallery from "./MediaGallery.jsx";
 
-const MODAL_VARIANTS = {
-  closed: { scale: 0.85, opacity: 0 },
-  open: { scale: 1, opacity: 1 },
+const MODAL_BLOOM_VARIANTS = {
+  closed: { scale: 0.28, opacity: 0, rotate: -12 },
+  open: { scale: 1, opacity: 1, rotate: 0 },
+};
+
+const MODAL_CONTENT_VARIANTS = {
+  hidden: { scale: 0.97, opacity: 0, y: 12 },
+  visible: { scale: 1, opacity: 1, y: 0 },
 };
 
 // Defensively open the dialog. showModal() can throw InvalidStateError in a
@@ -60,6 +65,7 @@ function safeClose(dialog) {
 export default function ProjectModal({ project, onClose }) {
   const dialogRef = useRef(null);
   const [renderedProject, setRenderedProject] = useState(project);
+  const [modalPhase, setModalPhase] = useState("idle");
 
   // Keep the dialog's contents in sync when a project is selected. Setting this
   // during render (not in an effect) means the content is correct before the
@@ -97,12 +103,13 @@ export default function ProjectModal({ project, onClose }) {
   // (close, swallow any error) and retries once, so this interleaving can
   // never leave the dialog stuck closed (or throw into React) -- worst case
   // it logs a `console.warn` and the user can click again.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return undefined;
 
     if (project) {
       if (!dialog.open) {
+        setModalPhase("animating");
         safeShowModal(dialog);
       }
       document.body.style.overflow = "hidden";
@@ -166,18 +173,32 @@ export default function ProjectModal({ project, onClose }) {
   return (
     <dialog
       ref={dialogRef}
-      className="project-modal"
+      className={`project-modal project-modal-${modalPhase}`}
+      data-phase={modalPhase}
       onClick={handleBackdropClick}
       aria-labelledby={renderedProject ? "project-modal-title" : undefined}
     >
       {renderedProject && (
-        <motion.div
-          className="project-modal-inner"
-          variants={MODAL_VARIANTS}
-          initial="closed"
-          animate={project ? "open" : "closed"}
-          transition={{ type: "spring", stiffness: 420, damping: 30 }}
-        >
+        <>
+          {project && modalPhase !== "ready" && (
+            <motion.div
+              className="project-modal-bloom"
+              variants={MODAL_BLOOM_VARIANTS}
+              initial="closed"
+              animate="open"
+              transition={{ type: "spring", stiffness: 420, damping: 28 }}
+              onAnimationComplete={() => setModalPhase("ready")}
+              aria-hidden="true"
+            />
+          )}
+
+          <motion.div
+            className="project-modal-inner"
+            variants={MODAL_CONTENT_VARIANTS}
+            initial="hidden"
+            animate={project && modalPhase === "ready" ? "visible" : "hidden"}
+            transition={{ type: "spring", stiffness: 360, damping: 28 }}
+          >
           <button
             type="button"
             className="modal-close"
@@ -211,7 +232,8 @@ export default function ProjectModal({ project, onClose }) {
           </ul>
 
           {renderedProject.detail}
-        </motion.div>
+          </motion.div>
+        </>
       )}
     </dialog>
   );

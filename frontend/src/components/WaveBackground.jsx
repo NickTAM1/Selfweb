@@ -183,7 +183,6 @@ export default function WaveBackground() {
     if (!setupGlResources()) return undefined;
 
     let rafId = null;
-    let lastDrawTime = 0;
     let disposed = false;
     const startTime = performance.now();
 
@@ -209,7 +208,7 @@ export default function WaveBackground() {
     // compete with the interactive page for GPU time.
     function resize() {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-      const downscale = window.innerWidth < 700 ? 0.45 : 0.55;
+      const downscale = window.innerWidth < 700 ? 0.42 : 0.5;
       const width = Math.max(1, Math.floor(window.innerWidth * dpr * downscale));
       const height = Math.max(1, Math.floor(window.innerHeight * dpr * downscale));
       if (canvas.width !== width || canvas.height !== height) {
@@ -233,15 +232,14 @@ export default function WaveBackground() {
 
     function renderLoop(now) {
       if (disposed) return;
-      // The ambient background only needs 30fps. The page content and native
-      // browser scrolling remain on the normal display frame rate, while the
-      // expensive fragment shader is evaluated half as often.
-      if (now - lastDrawTime >= 1000 / 30) {
-        mouseSmooth.x += (mouseTarget.x - mouseSmooth.x) * 0.12;
-        mouseSmooth.y += (mouseTarget.y - mouseSmooth.y) * 0.12;
-        drawFrame((now - startTime) / 1000);
-        lastDrawTime = now;
-      }
+      // requestAnimationFrame is synchronized to the active display. Drawing
+      // once per callback means a 60Hz panel gets 60fps, while 90/120/144Hz
+      // panels are not artificially capped at 60. The shader remains small
+      // and the internal canvas is downscaled so higher refresh rates stay
+      // lightweight enough for the interactive page.
+      mouseSmooth.x += (mouseTarget.x - mouseSmooth.x) * 0.12;
+      mouseSmooth.y += (mouseTarget.y - mouseSmooth.y) * 0.12;
+      drawFrame((now - startTime) / 1000);
       rafId = requestAnimationFrame(renderLoop);
     }
 

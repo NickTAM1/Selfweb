@@ -671,7 +671,7 @@ nav a:focus-visible {
   content: "";
   position: absolute;
   inset: -80% -55%;
-  z-index: -1;
+  z-index: 0;
   background: linear-gradient(
     112deg,
     transparent 37%,
@@ -683,6 +683,18 @@ nav a:focus-visible {
   opacity: 0;
   transform: translateX(-62%) rotate(8deg);
   pointer-events: none;
+}
+
+.filter-tab,
+.skill-filter-tab,
+.modal-close,
+.media-nav,
+.media-thumb,
+.skill-search-clear,
+.project-search-clear {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .btn-glass:hover::before,
@@ -1268,10 +1280,8 @@ nav a:focus-visible {
   max-height: min(85vh, 760px);
   overflow: hidden;
   border-radius: var(--r-lg);
-  background: var(--glass-bg-strong);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-  box-shadow: var(--shadow-lift), var(--highlight-top);
+  background: transparent;
+  box-shadow: none;
   color: var(--text);
   opacity: 0;
   /* No transform animation here -- Motion animates the "bubble" spring pop
@@ -1302,7 +1312,46 @@ nav a:focus-visible {
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  opacity: 0;
   pointer-events: none;
+  transition: opacity var(--t-fast) var(--ease-out);
+}
+
+.project-modal[data-phase="ready"] {
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  box-shadow: var(--shadow-lift), var(--highlight-top);
+}
+
+.project-modal[data-phase="ready"]::after {
+  opacity: 1;
+}
+
+.project-modal-bloom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 76px;
+  height: 76px;
+  border: 1px solid rgba(110, 231, 183, 0.72);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(167, 243, 208, 0.8) 0%, rgba(52, 211, 153, 0.32) 32%, transparent 72%);
+  box-shadow:
+    0 0 0 10px rgba(16, 185, 129, 0.08),
+    0 0 44px rgba(52, 211, 153, 0.58);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.project-modal-inner {
+  visibility: hidden;
+}
+
+.project-modal[data-phase="ready"] .project-modal-inner {
+  visibility: visible;
 }
 
 .project-modal[open] {
@@ -1836,8 +1885,7 @@ nav a:focus-visible {
   z-index: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.25;
-  filter: brightness(0.35) saturate(1.35);
+  opacity: 0.3;
   mix-blend-mode: normal;
   pointer-events: none;
 }
