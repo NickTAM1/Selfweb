@@ -748,7 +748,7 @@ nav a:focus-visible {
 
 .hero-role {
   display: inline-block;
-  color: var(--text-dim);
+  color: var(--text);
   border-left: 2px solid var(--emerald-light);
   padding: 2px 0 2px 12px;
   font-size: 14px;
@@ -776,7 +776,7 @@ nav a:focus-visible {
 }
 
 .hero-status {
-  color: var(--text-dim);
+  color: var(--text);
   font-size: 14px;
 }
 
@@ -1477,10 +1477,8 @@ nav a:focus-visible {
   box-shadow: none;
   color: var(--text);
   opacity: 0;
-  /* No transform animation here -- Motion animates the "bubble" spring pop
-     on .project-modal-inner instead. Animating scale/translate on both the
-     container and the inner content at once would double up and fight each
-     other, so this container only ever handles a plain opacity fade. */
+  /* Motion owns the clean zoom on .project-modal-inner. The dialog shell only
+     handles the backdrop and opacity so the glass box stays easy to follow. */
   /* `display: flex` above is intentionally unconditional (not scoped to
      [open]) so the opacity can animate smoothly on close instead
      of vanishing instantly -- but that means this element stays laid out
@@ -1519,121 +1517,6 @@ nav a:focus-visible {
 
 .project-modal[data-phase="ready"]::after {
   opacity: 1;
-}
-
-.project-modal-loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  width: 160px;
-  height: 160px;
-  margin: -80px 0 0 -80px;
-  transform-origin: center;
-  pointer-events: none;
-}
-
-.project-modal-bloom {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  width: 76px;
-  height: 76px;
-  border: 1px solid rgba(110, 231, 183, 0.72);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 32% 26%,
-    #d1fae5 0 5%,
-    #6ee7b7 13%,
-    #10b981 38%,
-    #047857 70%,
-    #022c22 100%
-  );
-  box-shadow:
-    0 0 0 10px rgba(16, 185, 129, 0.08),
-    0 0 44px rgba(52, 211, 153, 0.58);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  animation: modal-orb-glow 1.5s var(--ease-emphasized) both;
-}
-
-.project-modal-loader-ring {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  width: 142px;
-  height: 142px;
-  border: 2px solid rgba(52, 211, 153, 0.12);
-  border-top-color: rgba(167, 243, 208, 0.94);
-  border-right-color: rgba(16, 185, 129, 0.68);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 8px rgba(16, 185, 129, 0.04),
-    0 0 34px rgba(16, 185, 129, 0.24),
-    inset 0 0 18px rgba(16, 185, 129, 0.08);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  animation: modal-loader-spin 950ms linear infinite, modal-loader-breathe 1.5s var(--ease-emphasized) both;
-}
-
-.project-modal-loader-ring::before {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border: 1px dashed rgba(110, 231, 183, 0.34);
-  border-left-color: transparent;
-  border-radius: inherit;
-  animation: modal-loader-spin 1.7s linear infinite reverse;
-}
-
-.project-modal-loader-ring::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #d1fae5;
-  box-shadow: 0 0 12px 3px rgba(110, 231, 183, 0.78);
-  transform: translateX(-50%);
-}
-
-@keyframes modal-loader-spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-@keyframes modal-loader-breathe {
-  0% { opacity: 0; scale: 0.72; }
-  28% { opacity: 1; scale: 1; }
-  100% { opacity: 0.92; scale: 1.04; }
-}
-
-.project-modal-bloom::before {
-  content: "";
-  position: absolute;
-  top: 13px;
-  left: 16px;
-  width: 16px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(236, 253, 245, 0.7);
-  filter: blur(2px);
-  transform: rotate(-24deg);
-}
-
-@keyframes modal-orb-glow {
-  0% {
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.04), 0 0 18px rgba(52, 211, 153, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 0 16px rgba(16, 185, 129, 0.1), 0 0 62px rgba(52, 211, 153, 0.72);
-  }
-  100% {
-    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.08), 0 0 44px rgba(52, 211, 153, 0.58);
-  }
 }
 
 .project-modal-inner {
@@ -2198,7 +2081,7 @@ nav a:focus-visible {
 
 /* Deliberate exemption from the blanket reduced-motion rule above: these are
    short, click/hover-triggered micro-interactions (buttons, cards, the
-   ripple, the modal's bubble-pop-open, the cursor glow), not continuous or
+   ripple, the modal's zoom open, the cursor glow), not continuous or
    scroll-linked motion, so they always animate the same way regardless of
    the OS reduced-motion setting. Class selectors are more specific than the
    universal `*` selector above, so `!important` here reliably wins over the

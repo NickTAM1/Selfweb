@@ -89,22 +89,22 @@ export default function Home() {
   return (
     <div className="container home-container">
       <div className="hero">
-        <Reveal as="span" className="status-pill" index={0}>
+        <span className="status-pill">
           <span className="status-dot" aria-hidden="true" />
           <span className="mono-label accent">Open to work &middot; Remote worldwide</span>
-        </Reveal>
-        <Reveal as="span" className="hero-role" index={1}>
+        </span>
+        <span className="hero-role">
           Junior software developer · game systems, web &amp; backend
-        </Reveal>
-        <Reveal as="h1" index={2}>
+        </span>
+        <h1>
           Chi Lek (Nick) Tam
-        </Reveal>
-        <Reveal as="p" className="hero-pitch" index={3}>
+        </h1>
+        <p className="hero-pitch">
           I build game systems, web apps, and backend tools. My strongest work
           is UE5 physics and AI, and I enjoy tracing a bug all the way to the
           part underneath it.
-        </Reveal>
-        <Reveal as="div" className="hero-cta" index={4}>
+        </p>
+        <div className="hero-cta">
           <Link className="btn-glass btn-primary" to="/projects">
             View Projects
           </Link>
@@ -114,10 +114,10 @@ export default function Home() {
           <Link className="btn-glass" to="/contact">
             Contact
           </Link>
-        </Reveal>
-        <Reveal as="p" className="hero-status" index={5}>
+        </div>
+        <p className="hero-status">
           Based in Macau &middot; Open to remote software roles worldwide
-        </Reveal>
+        </p>
       </div>
 
       <StatStrip stats={STATS} />

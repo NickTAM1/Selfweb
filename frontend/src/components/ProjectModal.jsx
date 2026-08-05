@@ -2,18 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import MediaGallery from "./MediaGallery.jsx";
 
-const MODAL_BLOOM_VARIANTS = {
-  closed: { scale: 0.28, opacity: 0, y: 24, rotate: -12 },
-  open: {
-    scale: [0.28, 1.08, 0.96, 1],
-    opacity: [0, 1, 1, 1],
-    y: [24, -18, 10, 0],
-    rotate: [-12, 6, -3, 0],
-  },
-};
-
 const MODAL_CONTENT_VARIANTS = {
-  hidden: { scale: 0.97, opacity: 0, y: 12 },
+  hidden: { scale: 0.84, opacity: 0, y: 18 },
   visible: { scale: 1, opacity: 1, y: 0 },
 };
 
@@ -114,7 +104,7 @@ export default function ProjectModal({ project, onClose }) {
 
     if (project) {
       if (!dialog.open) {
-        setModalPhase("animating");
+        setModalPhase("ready");
         safeShowModal(dialog);
       }
       document.body.style.overflow = "hidden";
@@ -185,27 +175,12 @@ export default function ProjectModal({ project, onClose }) {
     >
       {renderedProject && (
         <>
-          {project && modalPhase !== "ready" && (
-            <motion.div
-              className="project-modal-loader"
-              variants={MODAL_BLOOM_VARIANTS}
-              initial="closed"
-              animate="open"
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              onAnimationComplete={() => setModalPhase("ready")}
-              aria-hidden="true"
-            >
-              <span className="project-modal-loader-ring" />
-              <span className="project-modal-bloom" />
-            </motion.div>
-          )}
-
           <motion.div
             className="project-modal-inner"
             variants={MODAL_CONTENT_VARIANTS}
             initial="hidden"
-            animate={project && modalPhase === "ready" ? "visible" : "hidden"}
-            transition={{ type: "spring", stiffness: 360, damping: 28 }}
+            animate={project ? "visible" : "hidden"}
+            transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
           >
           <button
             type="button"
