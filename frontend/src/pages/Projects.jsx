@@ -113,6 +113,10 @@ BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
     badges: ["Unity", "C#", "Physics Mechanics", "AI Behavior"],
     media: [
       { type: "video", src: "/Selfweb/media/radswing-demo.mp4", label: "Radswing Gameplay Capture" },
+      { type: "image", src: "/Selfweb/media/radswing-gameplay.jpg", label: "Gameplay Still 1" },
+      { type: "image", src: "/Selfweb/media/radswing-gameplay-2.jpg", label: "Gameplay Still 2" },
+      { type: "image", src: "/Selfweb/media/radswing-gameplay-3.jpg", label: "Gameplay Still 3" },
+      { type: "image", src: "/Selfweb/media/radswing-gameplay-4.jpg", label: "Gameplay Still 4" },
       { type: "image", src: "/Selfweb/media/radswing-1.jpg", label: "Radswing Screenshot 1" },
       { type: "image", src: "/Selfweb/media/radswing-2.jpg", label: "Radswing Screenshot 2" },
       { type: "image", src: "/Selfweb/media/radswing-3.jpg", label: "Radswing Screenshot 3" },

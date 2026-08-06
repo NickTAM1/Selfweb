@@ -4,15 +4,7 @@ import Reveal from "../components/Reveal.jsx";
 import IconPopover from "../components/IconPopover.jsx";
 import { MailIcon, LinkedinIcon, GithubIcon } from "../components/icons.jsx";
 
-// To enable direct sending, go to web3forms.com, enter your email, and
-// you'll receive a free access key by email (no account/password, no
-// template dashboard needed) -- add it to a `.env` file at the frontend
-// root (see `.env.example`) or as a GitHub Actions repo secret named
-// `VITE_WEB3FORMS_ACCESS_KEY` for the deployed build. Without it, the form
-// falls back to opening the visitor's email client.
-const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
-
-const WEB3FORMS_CONFIGURED = Boolean(WEB3FORMS_ACCESS_KEY);
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xaewnjgg";
 
 const OWNER_EMAIL = "2584718806q@gmail.com";
 const GITHUB_ACCOUNTS = [
@@ -41,42 +33,33 @@ export default function Contact() {
     e.preventDefault();
     if (sending) return;
 
-    if (!WEB3FORMS_CONFIGURED) {
-      openMailtoFallback(name, email, message);
-      setStatus({
-        kind: "fallback",
-        text: "Opened your email client. Send from there to reach me.",
-      });
-      return;
-    }
-
     setSending(true);
     setStatus(null);
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("_replyto", email);
+      formData.append("_subject", `Portfolio contact from ${name}`);
+      formData.append("message", message);
+
+      const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          name,
-          email,
-          message,
-          subject: `Portfolio contact from ${name}`,
-        }),
+        body: formData,
       });
-      const result = await response.json();
-      if (!response.ok || !result.success) {
-        throw new Error(result?.message || "Web3Forms submission failed");
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result?.error || result?.message || "Formspree submission failed");
       }
       setStatus({ kind: "success", text: "Message sent, thanks!" });
       setName("");
       setEmail("");
       setMessage("");
     } catch (err) {
-      console.warn("Contact: Web3Forms send failed, falling back to mailto", err);
+      console.warn("Contact: Formspree send failed, falling back to mailto", err);
       openMailtoFallback(name, email, message);
       setStatus({
         kind: "fallback",
@@ -153,7 +136,13 @@ export default function Contact() {
             </div>
             <span className="section-count">REPLY VIA EMAIL</span>
           </div>
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form
+            className="contact-form"
+            action={FORMSPREE_ENDPOINT}
+            method="POST"
+            onSubmit={handleSubmit}
+          >
+            <input type="hidden" name="_subject" value="Portfolio contact" />
             <div className="form-grid">
           <p>
             <label className="field-label" htmlFor="name">
@@ -161,6 +150,7 @@ export default function Contact() {
             </label>
             <input
               id="name"
+              name="name"
               type="text"
               placeholder="Your name"
               autoComplete="name"
@@ -175,6 +165,7 @@ export default function Contact() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               placeholder="you@example.com"
               autoComplete="email"
@@ -189,6 +180,7 @@ export default function Contact() {
             </label>
             <textarea
               id="message"
+              name="message"
               rows={5}
               placeholder="Tell me what you are building..."
               required
