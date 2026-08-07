@@ -117,10 +117,6 @@ BoatMesh->SetPhysicsAngularVelocityInDegrees(AngularVelocity);`}</pre>
       { type: "image", src: "/Selfweb/media/radswing-gameplay-2.jpg", label: "Gameplay Still 2" },
       { type: "image", src: "/Selfweb/media/radswing-gameplay-3.jpg", label: "Gameplay Still 3" },
       { type: "image", src: "/Selfweb/media/radswing-gameplay-4.jpg", label: "Gameplay Still 4" },
-      { type: "image", src: "/Selfweb/media/radswing-1.jpg", label: "Radswing Screenshot 1" },
-      { type: "image", src: "/Selfweb/media/radswing-2.jpg", label: "Radswing Screenshot 2" },
-      { type: "image", src: "/Selfweb/media/radswing-3.jpg", label: "Radswing Screenshot 3" },
-      { type: "image", src: "/Selfweb/media/radswing-4.jpg", label: "Radswing Screenshot 4" },
     ],
     highlights: [
       "A kick that sends enemies farther when the player is moving faster",
