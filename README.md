@@ -1,28 +1,44 @@
-# Chi Lek (Nick) Tam — Portfolio
+# Chi Lek (Nick) Tam
 
-Personal portfolio site for a Software Developer / Game Systems Programmer. Built with React and a custom "liquid glass" design system, live at **[nicktam1.github.io/Selfweb](https://nicktam1.github.io/Selfweb/)**.
+Hello, I am Chi Lek Tam, and most people call me Nick. I am a junior software developer based in Macau, and I am open to remote roles around the world.
 
-[![Deploy to GitHub Pages](https://github.com/NickTAM1/Selfweb/actions/workflows/deploy.yml/badge.svg)](https://github.com/NickTAM1/Selfweb/actions/workflows/deploy.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+I build game systems, web apps, and backend tools. I enjoy work that sits close to the real problem, whether that means making a boat feel right on moving water, building AI that reacts to the player, or finding the small part of a system that causes a bug.
 
-## What it is
+My strongest technical interests are UE5 physics, gameplay systems, AI, simulation, web development, and backend work. I also enjoy learning how different parts of a product fit together. Good software is not only about writing code. It is also about making the result clear, useful, and easy for another person to understand.
 
-A four-page portfolio (Home, Background, Projects, Contact) showcasing five real projects — UE5 physics and AI systems, a Unity combat prototype, an FFT ocean-wave simulator, a Rust desktop dev tool, and a full-stack shopping platform. Instead of a generic template, it has a few things built by hand:
+## A little about me
 
-- A custom **WebGL background** that reacts to the cursor
-- **In-page project modals** (native `<dialog>`, not a popup) with a video + image gallery per project
-- A glass UI with cursor-tracking hover glow, bidirectional scroll reveals, and spring-based open/close and page-transition animations (via [Motion](https://motion.dev))
-- A working **contact form** ([Formspree](https://formspree.io)) that falls back to a `mailto:` link if sending is unavailable — never silently broken
+I studied Computing and completed full stack development training at Vancouver Film School. Before moving into software development, I worked in enterprise IT for the gaming industry. That experience taught me to think about the whole system, not only the screen that people see.
 
-## Tech stack
+I speak Cantonese, Mandarin, English, and Japanese. I hold JLPT N1 in Japanese, and I am comfortable working with people from different backgrounds and time zones.
 
-The frontend remains a React/Vite static site. An optional Flask service now provides cached live GitHub stats for the two linked public profiles.
+## What you can find here
 
-React 19 · Vite 8 · React Router · Motion — deployed as a static site to GitHub Pages via GitHub Actions on every push to `main`.
+This site is my online work space. It gives a simple view of how I think, what I build, and the areas I want to grow in.
 
-## Running it locally
+The Projects page shows work such as Mobius Fish, a UE5 boat game with physics and AI, Radswing, a Unity first person kick fighter, an FFT ocean wave simulation, a Rust development tool, and a full stack shopping platform.
 
-Requires [Node.js](https://nodejs.org) 20+.
+Each project includes the problem, the parts I worked on, the result, and the lessons behind it. I also include gameplay videos and images where they help explain the work better than words.
+
+The Home page gives a quick view of my skills and GitHub activity. The Background page explains my experience and education. The Contact page is the best place to reach me about a role, a project, or a system that needs help.
+
+## How I like to work
+
+I like to start with the real goal, break the problem into smaller parts, and test each part as I go. When something breaks, I follow the result back through the system instead of hiding the symptom.
+
+I care about clear communication, steady improvement, and code that another person can pick up without needing a long explanation. I am still early in my career, but I bring curiosity, practical experience, and the habit of digging until I understand how something works.
+
+## Say hello
+
+You can visit the live site at [nicktam1.github.io/Selfweb](https://nicktam1.github.io/Selfweb/).
+
+You can also find me on [GitHub](https://github.com/NickTAM1), [my second GitHub profile](https://github.com/HUKLIA), or [LinkedIn](https://www.linkedin.com/in/chilek-tam-huzi).
+
+The contact form uses [Formspree](https://formspree.io) so messages can reach me directly. No frontend secret or `.env` file is needed for the form.
+
+## For anyone running the site locally
+
+The site is built with React and Vite. To view it locally, install [Node.js](https://nodejs.org) 20 or newer, then run:
 
 ```bash
 cd frontend
@@ -30,51 +46,18 @@ npm install
 npm run dev
 ```
 
-Opens at `http://localhost:5173/Selfweb/`.
+The local site opens at `http://localhost:5173/Selfweb/`.
 
-## Other commands
-
-```bash
-npm run build     # production build -> frontend/dist
-npm run preview   # serve the production build locally
-npm run lint      # run ESLint
-```
-
-## Configuration (optional)
-
-The home page links the `NickTAM1` and `HUKLIA` GitHub profiles. Without extra configuration it reads public profile counts directly from GitHub. For combined repo-star counts and server-side caching, run the Flask service and set `VITE_API_BASE_URL` before building:
+Useful commands are:
 
 ```bash
-cd backend
-python -m venv .venv
-.venv\Scripts\activate       # Windows
-pip install -r requirements.txt
-python app.py
-
-# in another terminal
-cd frontend
-copy .env.example .env       # keep VITE_API_BASE_URL=http://127.0.0.1:5000
-npm run dev
+npm run build
+npm run preview
+npm run lint
 ```
 
-For production, deploy the backend separately, set `CORS_ORIGIN` to the frontend origin, and provide `GITHUB_TOKEN` as a server secret if you need higher GitHub API limits. The static site remains functional if the API is unavailable.
-
-The home page combines both accounts into one contribution heatmap through `/api/github/contributions`. With no token, it shows a recent public-activity fallback. With a server-side token, it uses GitHub's full contribution calendar for each account; keep the token only in the backend environment and never in frontend code. For the deployed GitHub Pages build, set the Actions secret `VITE_API_BASE_URL` to the hosted Flask API URL.
-
-The contact form sends directly through the configured Formspree form and falls back to the visitor's email client if sending is unavailable. The Formspree form endpoint is kept in `frontend/src/pages/Contact.jsx`; no `.env` file or secret is needed in the frontend.
-
-## Deploying
-
-Deployment is automatic: pushing to `main` triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which builds the site and publishes it to GitHub Pages. No manual steps needed.
-
-## Project structure
-
-```
-frontend/   React + Vite app (the actual site)
-  src/pages/       Home, Background, Projects, Contact
-  src/components/  ProjectModal, MediaGallery, WaveBackground, IconPopover, etc.
-```
+The optional Flask service combines live GitHub information from my two public profiles. The frontend still works when that service is not running. Any private token belongs in the backend environment only, and `.env` files are ignored by Git.
 
 ## License
 
-The code in this repository is licensed under the [MIT License](LICENSE). This does not extend to Chi Lek Tam's name, résumé, project write-ups, or the screenshots/video in `frontend/public/media/` — that content is personal and shown here for portfolio purposes, not for reuse.
+The code is available under the [MIT License](LICENSE). My name, résumé, writing, project explanations, screenshots, and videos are personal portfolio content and are not provided for reuse.
